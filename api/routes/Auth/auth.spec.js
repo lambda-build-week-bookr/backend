@@ -1,1 +1,200 @@
-//
+const supertest = require('supertest');
+
+const db = require('../../../data/db.config');
+const server = require('../../server');
+
+const register = '/api/auth/register';
+const login = '/api/auth/login';
+const user = {
+  email: 'test@gmail.com',
+  password: 'abc123',
+};
+
+describe('Authentication', () => {
+  beforeAll(() => {
+    expect(process.env.DB_ENV).toBe('testing');
+  });
+
+  beforeEach(async () => {
+    await db('user_role').truncate();
+    const userTrunc = await db('user').truncate();
+    await db('role').truncate();
+  });
+
+  it('should respond with status 200', async () => {
+    const request = await supertest(server)
+      .get('/api/auth')
+      .expect(200);
+    expect(request.body).toEqual({
+      message: 'Auth API is up',
+    });
+  });
+
+  describe('POST /register', () => {
+    it('should handle missing data / 422', async () => {
+      let request = await supertest(server)
+        .post(register)
+        .send({
+          email: 'nopassword@gmail.com',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Missing required field (password)`,
+      });
+
+      request = await supertest(server)
+        .post(register)
+        .send({
+          password: 'abc123',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Missing required field (email)`,
+      });
+    });
+
+    it('should handle wrong data types / 422', async () => {
+      let request = await supertest(server)
+        .post(register)
+        .send({
+          email: 'nopassword@gmail.com',
+          password: 3,
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Expected type for (password) to be string, but instead saw number`,
+      });
+
+      request = await supertest(server)
+        .post(register)
+        .send({
+          email: 3,
+          password: 'abc123',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Expected type for (email) to be string, but instead saw number`,
+      });
+    });
+
+    it('should create a new user / 201', async () => {
+      const request = await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(201);
+
+      expect(request.body).toEqual({
+        status: 'success',
+        message: `Successfully registered user with email ${user.email}`,
+        user: {
+          email: user.email,
+          token: request.body.user.token,
+        },
+      });
+
+      const users = await db('user');
+      expect(users.length).toBe(1);
+    });
+
+    it('should return a token upon registration / 201', async () => {
+      const request = await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(201);
+      expect(request.body.user.token).toBeTruthy();
+    });
+
+    it('should handle duplicate emails / 405', async () => {
+      await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(201);
+
+      const request = await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(405);
+      
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Provided email must be unique, the email: \`${user.email}\` already exists in the database`,
+      });
+    });
+  });
+
+  describe('POST /login', () => {
+    it('should handle missing data / 422', async () => {
+      let request = await supertest(server)
+        .post(login)
+        .send({
+          email: 'nopassword@gmail.com',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Missing required field (password)`,
+      });
+
+      request = await supertest(server)
+        .post(login)
+        .send({
+          password: 'abc123',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Missing required field (email)`,
+      });
+    });
+
+    it('should handle wrong data types / 422', async () => {
+      let request = await supertest(server)
+        .post(login)
+        .send({
+          email: 'nopassword@gmail.com',
+          password: 3,
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Expected type for (password) to be string, but instead saw number`,
+      });
+
+      request = await supertest(server)
+        .post(login)
+        .send({
+          email: 3,
+          password: 'abc123',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        message: `Expected type for (email) to be string, but instead saw number`,
+      });
+    });
+
+    it('should return a token upon login / 200', async () => {
+      await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(201);
+      
+      const request = await supertest(server)
+        .post(login)
+        .send(user)
+        .expect(200);
+      expect(request.body).toEqual({
+        status: 'success',
+        message: `Successfully logged in with email ${user.email}`,
+        user: {
+          email: user.email,
+          token: request.body.user.token,
+        },
+      });
+    });
+  });
+});

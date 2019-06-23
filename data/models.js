@@ -1,11 +1,9 @@
-const knex = require('knex');
-const knexConfig = require('../knexfile.js');
-
-const db = knex(knexConfig.development);
+const db = require('./db.config');
 
 module.exports = table => ({
   add: add(table),
   get: get(table),
+  getBy: getBy(table),
   update: update(table),
   remove: remove(table),
   cb,
@@ -16,6 +14,9 @@ const get = table => id => {
   return db(table).where({ id }).first();
 }
 
+const getBy = table => filter => {
+  return db(table).where(filter).first();
+}
 
 const cb = (method) => {
   return method(db);

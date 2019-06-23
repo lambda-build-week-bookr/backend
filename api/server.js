@@ -3,7 +3,8 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const logger = require('./middleware/logger');
-const books = require('./routes/Books');
+const books = require('./routes/Book');
+const auth = require('./routes/AUth');
 
 const middleware = [
   express.json(),
@@ -48,6 +49,7 @@ server.get('/', (req, res) => {
 });
 
 server.use('/api/books', books);
+server.use('/api/auth', auth);
 server.use('/api/docs', express.static(__dirname + '/docs'));
 
 module.exports = server;

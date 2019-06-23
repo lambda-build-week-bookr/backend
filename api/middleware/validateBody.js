@@ -30,7 +30,10 @@ const validateBody = keys => async (req, res, next) => {
     resolve(null);
   });
 
-  if (response) return res.status(422).json(response);
+  if (response) return res.status(422).json({
+    status: 'error',
+    ...response,
+  });
   next();
 }
 
