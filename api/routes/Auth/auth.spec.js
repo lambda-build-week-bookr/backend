@@ -196,5 +196,25 @@ describe('Authentication', () => {
         },
       });
     });
+
+    it('should correctly handle invalid credentials / 401', async () => {
+      await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(201);
+      
+      const request = await supertest(server)
+        .post(login)
+        .send({
+          ...user,
+          password: 'nopechucktesta',
+        })
+        .expect(401);
+      
+      expect(request.body).toEqual({
+        status: 'error',
+        message: 'Invalid Credentials',
+      });
+    });
   });
 });

@@ -61,6 +61,7 @@ router.post('/login', validateBody(authBody), async (req, res) => {
     const user = await db.getBy({ email }).first();
 
     if (!(user && bcrypt.compareSync(password, user.password))) return res.status(401).json({
+      status: 'error',
       message: 'Invalid Credentials',
     });
 
