@@ -3,12 +3,14 @@ const validateBody = keys => async (req, res, next) => {
     Object.keys(keys).forEach(async (key) => {
       if (keys[key].required && !req.body[key]) {
         resolve({
+          error: "MissingField",
           message: `Missing required field (${key})`,
         });
       }
 
       if (keys[key].type && req.body[key] && !(typeof req.body[key] === keys[key].type)) {
         resolve({
+          error: "InvalidType",
           message: `Expected type for (${key}) to be ${keys[key].type}, but instead saw ${typeof req.body[key]}`,
         });
       }

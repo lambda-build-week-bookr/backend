@@ -86,6 +86,7 @@ router.post('/register', validateBody(authBody), async (req, res) => {
     if (error.message.match(/unique constraint/i)) {
       return res.status(400).json({
         status: 'error',
+        error: 'NonUnique',
         message: `Provided \`email\` must be unique: \`${req.body.email}\` already exists in the database`
       });
     }
@@ -138,6 +139,7 @@ router.post('/login', validateBody(authBody), async (req, res) => {
 
     if (!(user && bcrypt.compareSync(password, user.password))) return res.status(401).json({
       status: 'error',
+      error: 'InvalidCredentials',
       message: 'Invalid Credentials',
     });
 
