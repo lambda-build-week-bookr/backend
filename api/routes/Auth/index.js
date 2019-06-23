@@ -145,7 +145,7 @@ router.post('/login', validateBody(authBody), async (req, res) => {
 
     res.json({
       status: 'success',
-      message: `Successfully logged in with email ${user.email}`,
+      message: `Successfully logged in with \`email\` ${user.email}`,
       user: {
         email: user.email,
         token,

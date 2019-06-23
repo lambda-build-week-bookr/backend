@@ -17,7 +17,7 @@ describe('Authentication', () => {
 
   beforeEach(async () => {
     await db('user_role').truncate();
-    const userTrunc = await db('user').truncate();
+    await db('user').truncate();
     await db('role').truncate();
   });
 
@@ -108,7 +108,7 @@ describe('Authentication', () => {
       expect(request.body.user.token).toBeTruthy();
     });
 
-    it('should handle duplicate emails / 405', async () => {
+    it('should handle duplicate emails / 400', async () => {
       await supertest(server)
         .post(register)
         .send(user)
@@ -117,11 +117,11 @@ describe('Authentication', () => {
       const request = await supertest(server)
         .post(register)
         .send(user)
-        .expect(405);
+        .expect(400);
       
       expect(request.body).toEqual({
         status: 'error',
-        message: `Provided email must be unique, the email: \`${user.email}\` already exists in the database`,
+        message: `Provided \`email\` must be unique: \`${user.email}\` already exists in the database`,
       });
     });
   });
