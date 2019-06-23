@@ -1,15 +1,19 @@
 const { createLogger, format, transports } = require('winston');
 
-const hashRef = format((info, opts) => {
+// const hashRef = format((info, opts) => {
+//   const hash = Math.random().toString(36).substr(2);
+//   info.reference = hash;
+//   return info;
+// });
+
+const hashRef = () => {
   const hash = Math.random().toString(36).substr(2);
-  info.reference = hash;
-  return info;
-});
+  return hash;
+};
 
 const logger = createLogger({
   level: 'info',
   format: format.combine(
-    hashRef(),
     format.timestamp({
       format: 'MM-DD-YYYY HH:mm:ss'
     }),
@@ -29,12 +33,20 @@ const logger = createLogger({
   ]
 });
 
-const err = (error, service = 'bookr-api') => {
-  logger.log({
+const err = async (error, service = 'bookr-api') => {
+  const reference = hashRef();
+  await logger.log({
     level: 'error',
+    reference: reference,
     message: new Error(error),
     service
   });
+
+  return {
+    status: 'error',
+    message: 'Unknown server error',
+    reference,
+  };
 };
 
 const info = (message, service = 'bookr-api') => {
