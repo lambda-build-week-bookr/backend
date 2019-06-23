@@ -83,7 +83,7 @@ router.post('/register', validateBody(authBody), async (req, res) => {
       }
     });
   } catch (error) {
-    if (error.message.match(/unique constraint failed/i)) {
+    if (error.message.match(/unique constraint/i)) {
       return res.status(400).json({
         status: 'error',
         message: `Provided \`email\` must be unique: \`${req.body.email}\` already exists in the database`
