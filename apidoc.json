@@ -1,9 +1,9 @@
 {
-  "name": "example",
+  "name": "Lambda Bookr API",
   "version": "0.1.0",
-  "description": "apiDoc basic example",
+  "description": "API documentation for the Bookr application",
   "apidoc": {
-    "title": "Custom apiDoc browser title",
-    "url" : "https://api.github.com/v1"
+    "title": "Bookr API Docs",
+    "url" : "https://updatemelater.heroku.com/api/"
   }
 }
