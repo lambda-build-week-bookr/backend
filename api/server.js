@@ -4,7 +4,8 @@ const helmet = require('helmet');
 
 const logger = require('./middleware/logger');
 const books = require('./routes/Book');
-const auth = require('./routes/AUth');
+const auth = require('./routes/Auth');
+const authenticate = require('./middleware/auth');
 
 const middleware = [
   express.json(),
@@ -45,6 +46,12 @@ server.use(middleware);
 server.get('/', (req, res) => {
   res.json({
     message: 'Api is up and running',
+  });
+});
+
+server.get('/testauth', authenticate, (req, res) => {
+  res.json({
+    message: 'Authenticated Route',
   });
 });
 
