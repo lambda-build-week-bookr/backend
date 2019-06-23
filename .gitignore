@@ -2,4 +2,3 @@ node_modules
 data/*.db3
 logs
 .env
-api/docs
