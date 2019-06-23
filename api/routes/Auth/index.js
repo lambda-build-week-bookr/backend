@@ -24,6 +24,44 @@ const authBody = {
   },
 };
 
+/**
+ * @api {post} /auth/register Register new user
+ * @apiName AuthUser
+ * @apiGroup Auth
+ *
+ * @apiParam {string} email Users unique email.
+ * @apiParam {string} password Users password.
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {string} message Informative message indicating action(s) taken.
+ * @apiSuccess {object} user User information.
+ * @apiSuccess {string} user.email Users email.
+ * @apiSuccess {string} user.token Users authentication token.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 201 OK
+ *     {
+ *       "status": "success",
+ *       "message": "Successfully registered a user with email test@gmail.com",
+ *       "user": {
+ *          "email": "test@gmail.com",
+ *          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw",
+ *       },
+ *     }
+ *
+ * @apiUse InvalidType
+ * @apiUse MissingField
+ * 
+ * @apiError NonUnique Unique constraint was not met.
+ * @apiErrorExample NonUnique-Response
+ *     HTTP/1.1 400 Bad Request
+ *     {
+ *       "status": "error",
+ *       "error": "NonUnique",
+ *       "message": "Provided `email` must be unique: test@gmail.com already exists in the database",
+ *     }
+ * 
+ */
 router.post('/register', validateBody(authBody), async (req, res) => {
   try {
     const user = req.body;
@@ -46,15 +84,53 @@ router.post('/register', validateBody(authBody), async (req, res) => {
     });
   } catch (error) {
     if (error.message.match(/unique constraint failed/i)) {
-      return res.status(405).json({
+      return res.status(400).json({
         status: 'error',
-        message: `Provided email must be unique, the email: \`${req.body.email}\` already exists in the database`
+        message: `Provided \`email\` must be unique: \`${req.body.email}\` already exists in the database`
       });
     }
     res.status(500).json(await log.err(error));
   }
 });
 
+/**
+ * @api {post} /auth/login Login existing user
+ * @apiName LoginUser
+ * @apiGroup Auth
+ *
+ * @apiParam {string} email Users email.
+ * @apiParam {string} password Users password.
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {string} message Informative message indicating action(s) taken.
+ * @apiSuccess {object} user  User information.
+ * @apiSuccess {string} user.email Users email.
+ * @apiSuccess {string} user.token Users authentication token.
+ *
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "status": "success",
+ *       "message": "Successfully logged in with `email` test@gmail.com",
+ *       "user": {
+ *         "email": "test@gmail.com",
+ *         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw",
+ *       }
+ *     }
+ * 
+ * @apiUse InvalidType
+ * @apiUse MissingField
+ *
+ * @apiError InvalidCredentials Provided credentials could not be validated.
+ *
+ * @apiErrorExample InvalidCredentials-Response:
+ *     HTTP/1.1 401 Not Authorized
+ *     {
+ *       "status": "error",
+ *       "error": "InvalidCredentials",
+ *       "message": "Invalid Credentials",
+ *     }
+ */
 router.post('/login', validateBody(authBody), async (req, res) => {
   try {
     let { email, password } = req.body;

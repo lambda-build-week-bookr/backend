@@ -17,32 +17,32 @@ const middleware = [
 const server = express();
 server.use(middleware);
 
-
 /**
- * @api {get} /user/:id Request User information
- * @apiName GetUser
- * @apiGroup User
+ * @apiDefine MissingField
+ * @apiError MissingField An expected field was not sent with the request.
  *
- * @apiParam {Number} id Users unique ID.
- *
- * @apiSuccess {String} firstname Firstname of the User.
- * @apiSuccess {String} lastname  Lastname of the User.
- *
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
+ * @apiErrorExample MissingField-Response:
+ *     HTTP/1.1 422 Unprocessable Entity
  *     {
- *       "firstname": "John",
- *       "lastname": "Doe"
- *     }
- *
- * @apiError UserNotFound The id of the User was not found.
- *
- * @apiErrorExample Error-Response:
- *     HTTP/1.1 404 Not Found
- *     {
- *       "error": "UserNotFound"
+ *       "status": "error",
+ *       "error": "MissingField",
+ *       "message": "Missing required field (email)",
  *     }
  */
+
+/**
+ * @apiDefine InvalidType
+ * @apiError InvalidType An invalid field type was sent with the request.
+ *
+ * @apiErrorExample InvalidType-Response:
+ *     HTTP/1.1 422 Unprocessable Entity
+ *     {
+ *       "status": "error",
+ *       "error": "InvalidType",
+ *       "message": "Expected type for (password) to be string, but instead saw number",
+ *     }
+ */
+
 server.get('/', (req, res) => {
   res.json({
     message: 'Api is up and running',

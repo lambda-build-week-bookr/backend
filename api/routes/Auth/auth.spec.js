@@ -189,7 +189,7 @@ describe('Authentication', () => {
         .expect(200);
       expect(request.body).toEqual({
         status: 'success',
-        message: `Successfully logged in with email ${user.email}`,
+        message: `Successfully logged in with \`email\` ${user.email}`,
         user: {
           email: user.email,
           token: request.body.user.token,
