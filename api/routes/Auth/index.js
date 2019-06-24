@@ -72,13 +72,15 @@ router.post('/register', validateBody(authBody), async (req, res) => {
       password: hash,
     });
 
+    log.info(saved);
+
     const token = generateToken(user);
 
     res.status(201).json({
       status: 'success',
       message: `Successfully registered user with email ${user.email}`,
       user: {
-        email: saved.email,
+        email: user.email,
         token,
       }
     });
