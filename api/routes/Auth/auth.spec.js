@@ -7,6 +7,7 @@ const register = '/api/auth/register';
 const login = '/api/auth/login';
 const user = {
   email: 'test@gmail.com',
+  username: 'Taz',
   password: 'abc123',
 };
 
@@ -36,6 +37,7 @@ describe('Authentication', () => {
         .post(register)
         .send({
           email: 'nopassword@gmail.com',
+          username: 'user',
         })
         .expect(422);
       expect(request.body).toEqual({
@@ -48,12 +50,26 @@ describe('Authentication', () => {
         .post(register)
         .send({
           password: 'abc123',
+          username: 'user',
         })
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
         error: "MissingField",
         message: `Missing required field (email)`,
+      });
+
+      request = await supertest(server)
+        .post(register)
+        .send({
+          password: 'abc123',
+          email: 'nouser@gmail.com',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        error: "MissingField",
+        message: `Missing required field (username)`,
       });
     });
 
@@ -62,6 +78,7 @@ describe('Authentication', () => {
         .post(register)
         .send({
           email: 'nopassword@gmail.com',
+          username: 'Taz',
           password: 3,
         })
         .expect(422);
@@ -75,6 +92,7 @@ describe('Authentication', () => {
         .post(register)
         .send({
           email: 3,
+          username: 'Taz',
           password: 'abc123',
         })
         .expect(422);
@@ -82,6 +100,20 @@ describe('Authentication', () => {
         status: 'error',
         error: "InvalidType",
         message: `Expected type for (email) to be string, but instead saw number`,
+      });
+
+      request = await supertest(server)
+        .post(register)
+        .send({
+          email: 'baduser@gmail.com',
+          username: 3,
+          password: 'abc123',
+        })
+        .expect(422);
+      expect(request.body).toEqual({
+        status: 'error',
+        error: "InvalidType",
+        message: `Expected type for (username) to be string, but instead saw number`,
       });
     });
 
@@ -95,6 +127,7 @@ describe('Authentication', () => {
         status: 'success',
         message: `Successfully registered user with email ${user.email}`,
         user: {
+          username: 'Taz',
           email: user.email,
           token: request.body.user.token,
         },
@@ -112,7 +145,28 @@ describe('Authentication', () => {
       expect(request.body.user.token).toBeTruthy();
     });
 
-    it('should handle duplicate emails / 400', async () => {
+    it('should handle duplicate email / 400', async () => {
+      await supertest(server)
+        .post(register)
+        .send(user)
+        .expect(201);
+
+      let request = await supertest(server)
+        .post(register)
+        .send({
+          ...user,
+          username: 'NewUsername',
+        })
+        .expect(400);
+      
+      expect(request.body).toEqual({
+        status: 'error',
+        error: 'NonUnique',
+        message: `Provided \`email\` must be unique: \`${user.email}\` already exists in the database`,
+      });
+    });
+
+    it('should handle duplicate username / 400', async () => {
       await supertest(server)
         .post(register)
         .send(user)
@@ -120,13 +174,16 @@ describe('Authentication', () => {
 
       const request = await supertest(server)
         .post(register)
-        .send(user)
+        .send({
+          ...user,
+          email: 'newe2345mail@gmail.com',
+        })
         .expect(400);
       
       expect(request.body).toEqual({
         status: 'error',
         error: 'NonUnique',
-        message: `Provided \`email\` must be unique: \`${user.email}\` already exists in the database`,
+        message: `Provided \`username\` must be unique: \`${user.username}\` already exists in the database`,
       });
     });
   });
@@ -200,6 +257,7 @@ describe('Authentication', () => {
         status: 'success',
         message: `Successfully logged in with \`email\` ${user.email}`,
         user: {
+          username: 'Taz',
           email: user.email,
           token: request.body.user.token,
         },

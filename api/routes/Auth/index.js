@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
   });
 });
 
-const authBody = {
+const loginBody = {
   email: {
     required: true,
     type: 'string',
@@ -22,6 +22,14 @@ const authBody = {
     required: true,
     type: 'string',
   },
+};
+
+const registerBody = {
+  ...loginBody,
+  username: {
+    required: true,
+    type: 'string',
+  }
 };
 
 /**
@@ -62,17 +70,15 @@ const authBody = {
  *     }
  * 
  */
-router.post('/register', validateBody(authBody), async (req, res) => {
+router.post('/register', validateBody(registerBody), async (req, res) => {
   try {
     const user = req.body;
     const hash = bcrypt.hashSync(user.password, 10);
 
-    const saved = await db.add({
+    await db.add({
       ...user,
       password: hash,
     });
-
-    log.info(saved);
 
     const token = generateToken(user);
 
@@ -80,16 +86,18 @@ router.post('/register', validateBody(authBody), async (req, res) => {
       status: 'success',
       message: `Successfully registered user with email ${user.email}`,
       user: {
+        username: user.username,
         email: user.email,
         token,
       }
     });
   } catch (error) {
     if (error.message.match(/unique constraint/i)) {
+      const key = error.message.match(/user.email/i) ? 'email' : 'username';
       return res.status(400).json({
         status: 'error',
         error: 'NonUnique',
-        message: `Provided \`email\` must be unique: \`${req.body.email}\` already exists in the database`
+        message: `Provided \`${key}\` must be unique: \`${req.body[key]}\` already exists in the database`
       });
     }
     res.status(500).json(await log.err(error));
@@ -134,7 +142,7 @@ router.post('/register', validateBody(authBody), async (req, res) => {
  *       "message": "Invalid Credentials",
  *     }
  */
-router.post('/login', validateBody(authBody), async (req, res) => {
+router.post('/login', validateBody(loginBody), async (req, res) => {
   try {
     let { email, password } = req.body;
     const user = await db.getBy({ email }).first();
@@ -151,6 +159,7 @@ router.post('/login', validateBody(authBody), async (req, res) => {
       status: 'success',
       message: `Successfully logged in with \`email\` ${user.email}`,
       user: {
+        username: user.username,
         email: user.email,
         token,
       },
