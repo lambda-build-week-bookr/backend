@@ -40,6 +40,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "MissingField",
         message: `Missing required field (password)`,
       });
 
@@ -51,6 +52,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "MissingField",
         message: `Missing required field (email)`,
       });
     });
@@ -65,6 +67,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "InvalidType",
         message: `Expected type for (password) to be string, but instead saw number`,
       });
 
@@ -77,6 +80,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "InvalidType",
         message: `Expected type for (email) to be string, but instead saw number`,
       });
     });
@@ -121,6 +125,7 @@ describe('Authentication', () => {
       
       expect(request.body).toEqual({
         status: 'error',
+        error: 'NonUnique',
         message: `Provided \`email\` must be unique: \`${user.email}\` already exists in the database`,
       });
     });
@@ -136,6 +141,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "MissingField",
         message: `Missing required field (password)`,
       });
 
@@ -147,6 +153,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "MissingField",
         message: `Missing required field (email)`,
       });
     });
@@ -161,6 +168,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "InvalidType",
         message: `Expected type for (password) to be string, but instead saw number`,
       });
 
@@ -173,6 +181,7 @@ describe('Authentication', () => {
         .expect(422);
       expect(request.body).toEqual({
         status: 'error',
+        error: "InvalidType",
         message: `Expected type for (email) to be string, but instead saw number`,
       });
     });
@@ -213,6 +222,7 @@ describe('Authentication', () => {
       
       expect(request.body).toEqual({
         status: 'error',
+        error: 'InvalidCredentials',
         message: 'Invalid Credentials',
       });
     });
