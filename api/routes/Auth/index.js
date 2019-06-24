@@ -37,8 +37,9 @@ const registerBody = {
  * @apiName AuthUser
  * @apiGroup Auth
  *
- * @apiParam {string} email Users unique email.
+ * @apiParam {string} email Users unique (private) login email.
  * @apiParam {string} password Users password.
+ * @apiParam {string} username Users unique (public) username.
  *
  * @apiSuccess {string} status Status of the request.
  * @apiSuccess {string} message Informative message indicating action(s) taken.
@@ -52,6 +53,7 @@ const registerBody = {
  *       "status": "success",
  *       "message": "Successfully registered a user with email test@gmail.com",
  *       "user": {
+ *          "username": "Taz",
  *          "email": "test@gmail.com",
  *          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw",
  *       },
@@ -109,7 +111,7 @@ router.post('/register', validateBody(registerBody), async (req, res) => {
  * @apiName LoginUser
  * @apiGroup Auth
  *
- * @apiParam {string} email Users email.
+ * @apiParam {string} email Users (private) login email.
  * @apiParam {string} password Users password.
  *
  * @apiSuccess {string} status Status of the request.
@@ -124,6 +126,7 @@ router.post('/register', validateBody(registerBody), async (req, res) => {
  *       "status": "success",
  *       "message": "Successfully logged in with `email` test@gmail.com",
  *       "user": {
+ *         "username": "Taz",
  *         "email": "test@gmail.com",
  *         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw",
  *       }

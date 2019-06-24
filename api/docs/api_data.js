@@ -13,7 +13,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "email",
-            "description": "<p>Users unique email.</p>"
+            "description": "<p>Users unique (private) login email.</p>"
           },
           {
             "group": "Parameter",
@@ -21,6 +21,13 @@ define({ "api": [
             "optional": false,
             "field": "password",
             "description": "<p>Users password.</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "username",
+            "description": "<p>Users unique (public) username.</p>"
           }
         ]
       }
@@ -68,7 +75,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 201 OK\n{\n  \"status\": \"success\",\n  \"message\": \"Successfully registered a user with email test@gmail.com\",\n  \"user\": {\n     \"email\": \"test@gmail.com\",\n     \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw\",\n  },\n}",
+          "content": "HTTP/1.1 201 OK\n{\n  \"status\": \"success\",\n  \"message\": \"Successfully registered a user with email test@gmail.com\",\n  \"user\": {\n     \"username\": \"Taz\",\n     \"email\": \"test@gmail.com\",\n     \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw\",\n  },\n}",
           "type": "json"
         }
       ]
@@ -132,7 +139,7 @@ define({ "api": [
             "type": "string",
             "optional": false,
             "field": "email",
-            "description": "<p>Users email.</p>"
+            "description": "<p>Users (private) login email.</p>"
           },
           {
             "group": "Parameter",
@@ -187,7 +194,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"message\": \"Successfully logged in with `email` test@gmail.com\",\n  \"user\": {\n    \"email\": \"test@gmail.com\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw\",\n  }\n}",
+          "content": "HTTP/1.1 200 OK\n{\n  \"status\": \"success\",\n  \"message\": \"Successfully logged in with `email` test@gmail.com\",\n  \"user\": {\n    \"username\": \"Taz\",\n    \"email\": \"test@gmail.com\",\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjoyLCJpYXQiOjE1NjEzMjI0NzksImV4cCI6MTU2MTQwODg3OX0.PC45fmQnUYAFXO_UaHY9Eefr8RnylExAul-pIFtUgBw\",\n  }\n}",
           "type": "json"
         }
       ]
@@ -236,5 +243,33 @@ define({ "api": [
     "version": "0.0.0",
     "filename": "api/routes/Auth/index.js",
     "groupTitle": "Auth"
+  },
+  {
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "optional": false,
+            "field": "varname1",
+            "description": "<p>No type.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "varname2",
+            "description": "<p>With type.</p>"
+          }
+        ]
+      }
+    },
+    "type": "",
+    "url": "",
+    "version": "0.0.0",
+    "filename": "api/docs/main.js",
+    "group": "C__xampp_htdocs_git_lambda_bookr_backend_api_docs_main_js",
+    "groupTitle": "C__xampp_htdocs_git_lambda_bookr_backend_api_docs_main_js",
+    "name": ""
   }
 ] });
