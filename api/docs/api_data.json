@@ -3,11 +3,6 @@
     "type": "post",
     "url": "/auth/register",
     "title": "Register new user",
-    "sampleRequest": [
-      {
-        "url": "https://api-bookr.herokuapp.com/auth/register"
-      }
-    ],
     "name": "AuthUser",
     "group": "Auth",
     "parameter": {
@@ -134,11 +129,6 @@
     "type": "post",
     "url": "/auth/login",
     "title": "Login existing user",
-    "sampleRequest": [
-      {
-        "url": "https://api-bookr.herokuapp.com/auth/login"
-      }
-    ],
     "name": "LoginUser",
     "group": "Auth",
     "parameter": {
