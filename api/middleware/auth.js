@@ -1,19 +1,21 @@
 const jwt = require('jsonwebtoken');
 
-const secret = process.env.JWT_SECRET || 'set a secret in your .env file';
+const secret = process.env.JWT_SECRET || 'add a .env file to root of project with the JWT_SECRET variable';
 const log = require('../../utils/logger');
 
 const auth = async (req, res, next) => {
   try {
     if (!req.headers.authorization) return res.status(400).json({
       status: 'error',
-      message: 'Please provide a token in the Authorization header',
+      error: 'MissingAuth',
+      message: 'Please provide a token in the `Authorization` header.',
     });
 
     jwt.verify(req.headers.authorization, secret, (error, decoded) => {
       if (error) return res.status(401).json({
         status: 'error',
-        message: "Invalid Credentials",
+        error: 'InvalidCreds',
+        message: 'Invalid/Expired authorization token provided.',
       });
 
       // TODO: Add roles

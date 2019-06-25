@@ -11,6 +11,13 @@ const hashRef = () => {
   return hash;
 };
 
+const consoleTransport = new transports.Console({
+  format: format.combine(
+    format.colorize(),
+    format.simple(),
+  )
+})
+
 const logger = createLogger({
   level: 'info',
   format: format.combine(
@@ -24,14 +31,13 @@ const logger = createLogger({
   transports: [
     new transports.File({ filename: 'logs/error.log', level: 'error' }),
     new transports.File({ filename: 'logs/combined.log' }),
-    new transports.Console({
-      format: format.combine(
-        format.colorize(),
-        format.simple(),
-      )
-    })
+    consoleTransport,
   ]
 });
+
+if (process.env.DB_ENV === 'testing') {
+  logger.remove(consoleTransport);
+}
 
 const err = async (error, service = 'bookr-api') => {
   const reference = hashRef();

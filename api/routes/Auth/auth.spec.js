@@ -1,4 +1,5 @@
 const supertest = require('supertest');
+const cleaner = require('knex-cleaner');
 
 const db = require('../../../data/db.config');
 const server = require('../../server');
@@ -17,9 +18,9 @@ describe('Authentication', () => {
   });
 
   beforeEach(async () => {
-    await db('user_role').truncate();
-    await db('user').truncate();
-    await db('role').truncate();
+    await cleaner.clean(db, {
+      mode: 'truncate',
+    });
   });
 
   it('should respond with status 200', async () => {

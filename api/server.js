@@ -43,6 +43,32 @@ server.use(middleware);
  *     }
  */
 
+ /**
+  * @apiDefine MissingAuth
+  * @apiError MissingAuth No Authorization header was sent with the request.
+  * 
+  * @apiErrorExample MissingAuth-Response:
+  *   HTTP/1.1 400 Bad Request
+  *   {
+  *     "status": "error",
+  *     "error": "MissingAuth",
+  *     "message": "Please provide a token in the `Authorization` header.",
+  *   }
+  */
+
+/**
+ * @apiDefine InvalidCreds
+ * @apiError InvalidCreds Token sent with the request is invalid or expired.
+ * 
+ * @apiErrorExample InavlidCreds-Response:
+ *  HTTP/1.1 401 Unauthorized
+ *  {
+ *    "status": "error",
+ *    "error": "InvalidCreds",
+ *    "message": "Invalid/Expired authorization token provided.",
+ *  }
+ */
+
 server.get('/', (req, res) => {
   res.json({
     message: 'Api is up and running',
