@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const logger = require('./middleware/logger');
+const log = require('../utils/logger');
 const books = require('./routes/Book');
 const auth = require('./routes/Auth');
 const authenticate = require('./middleware/auth');
@@ -84,10 +85,10 @@ server.get('/testauth', authenticate, (req, res) => {
 
 server.get('/testbooks', async (req, res) => {
   try {
-    const books = await parser('physics');
+    const books = await parser('mathematics');
     res.json(books);
   } catch (error) {
-    res.status(500).json(error.response);
+    res.status(500).json(log.err(error));
   }
 })
 

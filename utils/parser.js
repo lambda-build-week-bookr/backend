@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-const bookKey = process.env.BOOK_KEY;
 // Parses google books data
 const parser = async (subject) => {
 
@@ -22,13 +21,16 @@ const parser = async (subject) => {
       language,
     } = volumeInfo;
     const identifiers = {};
-    industryIdentifiers.forEach(isbn => {
-      if (isbn.type === 'ISBN_10') {
-        identifiers.isbn10 = isbn.identifier;
-      } else {
-        identifiers.isbn13 = isbn.identifier;
-      }
-    });
+
+    if (industryIdentifiers) {
+      industryIdentifiers.forEach(isbn => {
+        if (isbn.type === 'ISBN_10') {
+          identifiers.isbn10 = isbn.identifier;
+        } else {
+          identifiers.isbn13 = isbn.identifier;
+        }
+      });
+    }
 
     return {
       title,
