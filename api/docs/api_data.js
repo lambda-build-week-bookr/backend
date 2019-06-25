@@ -247,7 +247,7 @@ define({ "api": [
   {
     "type": "get",
     "url": "/books",
-    "title": "Gets a list of books",
+    "title": "Get a list of books",
     "name": "BookList",
     "group": "Books",
     "header": {
@@ -279,6 +279,13 @@ define({ "api": [
             "optional": false,
             "field": "books",
             "description": "<p>A list of books.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "integer",
+            "optional": false,
+            "field": "book.id",
+            "description": "<p>The book id.</p>"
           },
           {
             "group": "Success 200",
@@ -327,7 +334,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n  {\n    \"status\": \"success\",\n    \"books\": [\n      {\n        \"title\": \"Book Title\",\n        \"isbn\": \"1234567890\",\n        \"publisher\": \"Publisher Name\",\n        \"cover\": \"https://link.to/image.png\",\n        \"edition\": \"5th Edition\",\n        \"description\": \"This is a generic book description.\",\n      },\n    ],\n  }",
+          "content": "HTTP/1.1 200 OK\n  {\n    \"status\": \"success\",\n    \"books\": [\n      {\n        \"id\": 1,\n        \"title\": \"Book Title\",\n        \"isbn\": \"1234567890\",\n        \"publisher\": \"Publisher Name\",\n        \"cover\": \"https://link.to/image.png\",\n        \"edition\": \"5th Edition\",\n        \"description\": \"This is a generic book description.\",\n      },\n    ],\n  }",
           "type": "json"
         }
       ]
@@ -359,7 +366,7 @@ define({ "api": [
           "type": "json"
         },
         {
-          "title": "InavlidCreds-Response:",
+          "title": "InvalidCreds-Response:",
           "content": "HTTP/1.1 401 Unauthorized\n{\n  \"status\": \"error\",\n  \"error\": \"InvalidCreds\",\n  \"message\": \"Invalid/Expired authorization token provided.\",\n}",
           "type": "json"
         }

@@ -60,7 +60,7 @@ server.use(middleware);
  * @apiDefine InvalidCreds
  * @apiError InvalidCreds Token sent with the request is invalid or expired.
  * 
- * @apiErrorExample InavlidCreds-Response:
+ * @apiErrorExample InvalidCreds-Response:
  *  HTTP/1.1 401 Unauthorized
  *  {
  *    "status": "error",
