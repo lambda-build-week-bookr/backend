@@ -17,6 +17,9 @@ describe('Books', () => {
     });
   });
 
+  it('should work', () => {
+    expect(1).toBe(1);
+  })
   describe('GET /', () => {
     it('should handle no authorization header / 400', async () => {
       const request = await supertest(server)

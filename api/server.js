@@ -85,7 +85,7 @@ server.get('/testauth', authenticate, (req, res) => {
 
 server.get('/testbooks', async (req, res) => {
   try {
-    const books = await parser('mathematics');
+    const books = await parser('physics');
     res.json(books);
   } catch (error) {
     res.status(500).json(log.err(error));

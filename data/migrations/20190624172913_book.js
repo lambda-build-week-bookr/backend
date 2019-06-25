@@ -14,7 +14,7 @@ exports.up = function(knex, Promise) {
       table.string('cover')
         .notNullable();
       table.string('edition')
-        .notNullable();
+      table.string('thumbnail')
       table.string('description')
         .notNullable();
       table.integer('publisher_id')

@@ -2,7 +2,6 @@ const axios = require('axios');
 
 // Parses google books data
 const parser = async (subject) => {
-
   // book endpoint https://www.googleapis.com/books/v1/volumes?q=physics
   // image endpoint https://books.google.com/books/content?id=uSPzV9R08nsC&printsec=frontcover&img=1&zoom=3
 
@@ -36,7 +35,7 @@ const parser = async (subject) => {
       title,
       authors,
       identifiers,
-      publisher,
+      publisher: publisher || 'Unknown',
       cover: `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=3`,
       thumbnail: `https://books.google.com/books/content?id=${id}&printsec=frontcover&img=1&zoom=2`,
       description,
@@ -45,7 +44,7 @@ const parser = async (subject) => {
       publishedDate,
       language,
     };
-  });
+  }).filter(book => book.description);
 
   return books;
 }

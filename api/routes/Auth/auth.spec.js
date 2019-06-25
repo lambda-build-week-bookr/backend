@@ -23,6 +23,10 @@ describe('Authentication', () => {
     });
   });
 
+  it('should work', () => {
+    expect(1).toBe(1);
+  });
+
   it('should respond with status 200', async () => {
     const request = await supertest(server)
       .get('/api/auth')
