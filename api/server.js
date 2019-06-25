@@ -6,6 +6,7 @@ const logger = require('./middleware/logger');
 const books = require('./routes/Book');
 const auth = require('./routes/Auth');
 const authenticate = require('./middleware/auth');
+const parser = require('../utils/parser');
 
 const middleware = [
   express.json(),
@@ -80,6 +81,15 @@ server.get('/testauth', authenticate, (req, res) => {
     message: 'Authenticated Route',
   });
 });
+
+server.get('/testbooks', async (req, res) => {
+  try {
+    const books = await parser('physics');
+    res.json(books);
+  } catch (error) {
+    res.status(500).json(error.response);
+  }
+})
 
 server.use('/api/books', books);
 server.use('/api/auth', auth);
