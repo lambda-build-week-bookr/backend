@@ -6,6 +6,7 @@ const logger = require('./middleware/logger');
 const books = require('./routes/Book');
 const auth = require('./routes/Auth');
 const authenticate = require('./middleware/auth');
+const parser = require('../utils/parser');
 
 const middleware = [
   express.json(),
@@ -80,6 +81,17 @@ server.get('/testauth', authenticate, (req, res) => {
     message: 'Authenticated Route',
   });
 });
+
+server.get('/testbooks', async (req, res) => {
+  const axios = require('axios');
+  try {
+    const books = await parser('physics');
+    // const books = await axios.get('https://www.googleapis.com/books/v1/volumes/zyTCAlFPjgYC?key=AIzaSyAcMyBkoOkv-tbE6xyxalkmtpPT-r3K4Vk');
+    res.json(books);
+  } catch (error) {
+    res.json(error);
+  }
+})
 
 server.use('/api/books', books);
 server.use('/api/auth', auth);

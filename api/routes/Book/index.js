@@ -1,6 +1,3 @@
-// GET / return list of books
-// GET /:id return single book
-
 const express = require('express');
 
 const router = express.Router();
@@ -21,7 +18,7 @@ router.use(auth);
  * @apiSuccess {array} books A list of books.
  * @apiSuccess {integer} book.id The book id.
  * @apiSuccess {string} book.title The book title.
- * @apiSuccess {string} book.isbn The 10 digit ISBN.
+ * @apiSuccess {string} book.isbn The 13 digit ISBN.
  * @apiSuccess {string} book.publisher The name of the publishing company.
  * @apiSuccess {string} book.cover A URL with a cover image for the book.
  * @apiSuccess {string} book.edition A short string regarding the edition of the book.
@@ -35,7 +32,7 @@ router.use(auth);
  *        {
  *          "id": 1,
  *          "title": "Book Title",
- *          "isbn": "1234567890",
+ *          "isbn": "1234567890123",
  *          "publisher": "Publisher Name",
  *          "cover": "https://link.to/image.png",
  *          "edition": "5th Edition",
@@ -72,7 +69,7 @@ router.get('/', async (req, res) => {
  * @apiSuccess {object} book A book with the requested id.
  * @apiSuccess {integer} book.id The book id.
  * @apiSuccess {string} book.title The book title.
- * @apiSuccess {string} book.isbn The 10 digit ISBN.
+ * @apiSuccess {string} book.isbn The 13 digit ISBN.
  * @apiSuccess {string} book.publisher The name of the publishing company.
  * @apiSuccess {string} book.cover A URL with a cover image for the book.
  * @apiSuccess {string} book.edition A short string regarding the edition of the book.
@@ -90,7 +87,7 @@ router.get('/', async (req, res) => {
  *      "book": {
  *        "id": 1,
  *        "title": "Book Title",
- *        "isbn": "1234567890",
+ *        "isbn": "1234567890123",
  *        "publisher": "Publisher Name",
  *        "cover": "https://link.to/image.png",
  *        "edition": "5th Edition",
