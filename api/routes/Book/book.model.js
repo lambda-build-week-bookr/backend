@@ -21,7 +21,10 @@ const getWithPublisher = () => {
       .leftOuterJoin('review', {
         'book.id': 'review.book_id',
       });
-    return books;
+    return books.map(book => ({
+      ...book,
+      averageRating: book.averageRating ? Number(book.averageRating.toFixed(2)) : null,
+    }));
   });
 };
 
@@ -62,7 +65,7 @@ const hydrateBook = async (id) => {
     return {
       ...book,
       authors,
-      averageRating: reviews.reduce((accumulator, current) => accumulator + current.rating, 0) / reviews.length,
+      averageRating: Number((reviews.reduce((accumulator, current) => accumulator + current.rating, 0) / reviews.length).toFixed(2)),
       totalReviews: reviews.length,
       reviews,
     };
