@@ -42,9 +42,21 @@ const hydrateBook = async (id) => {
       .where({ book_id: id })
       .leftOuterJoin('author', { 'author.id': 'book_author.author_id' })
       .reduce((acc, { name }) => [...acc, name], []);
+    const reviews = await db('review')
+      .select([
+        'review.id as id',
+        'user.username',
+        'review.rating',
+        'review.review',
+      ])
+      .where({ 'review.book_id': id })
+      .leftOuterJoin('user', {
+        'user.id': 'review.user_id',
+      });
     return {
       ...book,
       authors,
+      reviews,
     };
   });
 }
