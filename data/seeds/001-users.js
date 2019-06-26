@@ -1,9 +1,6 @@
 const bcrypt = require('bcryptjs');
 
 exports.seed = async (knex) => {
-  await knex('review').truncate();
-  await knex('user').truncate();
-
   await knex('user').insert([
     {
       username: 'admin',
