@@ -503,13 +503,27 @@ define({ "api": [
             "optional": false,
             "field": "book.publisher",
             "description": "<p>The name of the publishing company.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "float",
+            "optional": false,
+            "field": "book.averageRating",
+            "description": "<p>Average rating for this book.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "integer",
+            "optional": false,
+            "field": "book.totalRatings",
+            "description": "<p>The total number of ratings for this book.</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"books\": [\n       {\n         \"id\": 1,\n         \"title\": \"The Math Book\",\n         \"isbn\": \"9781402757969\",\n         \"cover\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3\",\n         \"thumbnail\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2\",\n         \"description\": \"This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \\\"ant odometers\\\" and moving through time to our modern-day quest for new dimensions.\",\n         \"publisher\": \"Sterling Publishing Company, Inc.\"\n       },\n     ]\n   }",
+          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"books\": [\n       {\n         \"id\": 1,\n         \"title\": \"The Math Book\",\n         \"isbn\": \"9781402757969\",\n         \"cover\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3\",\n         \"thumbnail\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2\",\n         \"description\": \"This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \\\"ant odometers\\\" and moving through time to our modern-day quest for new dimensions.\",\n         \"publisher\": \"Sterling Publishing Company, Inc.\"\n         \"averageRating\" 3.45,\n         \"totalRatings\": 2,\n       },\n     ]\n   }",
           "type": "json"
         }
       ]

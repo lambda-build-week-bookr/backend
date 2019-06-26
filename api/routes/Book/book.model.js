@@ -13,6 +13,7 @@ const getWithPublisher = () => {
         'publisher.name as publisher',
       ])
       .avg('review.rating as averageRating')
+      .count('review.rating as totalRatings')
       .groupBy('book.id')
       .leftOuterJoin('publisher', {
         'book.publisher_id': 'publisher.id',

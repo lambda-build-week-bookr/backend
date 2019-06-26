@@ -26,6 +26,8 @@ router.use(auth);
  * @apiSuccess {string} book.thumbnail A URL with a thumbnail image for the book.
  * @apiSuccess {string} book.description A long string with the books summary/description.
  * @apiSuccess {string} book.publisher The name of the publishing company.
+ * @apiSuccess {float} book.averageRating Average rating for this book.
+ * @apiSuccess {integer} book.totalRatings The total number of ratings for this book.
  *
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
@@ -40,6 +42,8 @@ router.use(auth);
  *           "thumbnail": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2",
  *           "description": "This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \"ant odometers\" and moving through time to our modern-day quest for new dimensions.",
  *           "publisher": "Sterling Publishing Company, Inc."
+ *           "averageRating" 3.45,
+ *           "totalRatings": 2,
  *         },
  *       ]
  *     }
