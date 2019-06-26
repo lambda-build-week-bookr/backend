@@ -9,8 +9,8 @@ const access = access => async (req, res, next) => {
 
     if (role !== access) return res.status(403).json({
       status: 'error',
-      error: 'Invalid Access',
-      message: 'You do not have access to this endpoint.',
+      error: 'InvalidAuth',
+      message: 'You do not have access to this resource.',
     });
 
     next();

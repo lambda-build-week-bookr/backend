@@ -3,11 +3,9 @@ const cors = require('cors');
 const helmet = require('helmet');
 
 const logger = require('./middleware/logger');
-const log = require('../utils/logger');
 const books = require('./routes/Book');
 const auth = require('./routes/Auth');
-const authenticate = require('./middleware/auth');
-const parser = require('../utils/parser');
+const reviews = require('./routes/Review');
 
 const middleware = [
   express.json(),
@@ -77,23 +75,9 @@ server.get('/', (req, res) => {
   });
 });
 
-server.get('/testauth', authenticate, (req, res) => {
-  res.json({
-    message: 'Authenticated Route',
-  });
-});
-
-server.get('/testbooks', async (req, res) => {
-  try {
-    const books = await parser('physics');
-    res.json(books);
-  } catch (error) {
-    res.status(500).json(log.err(error));
-  }
-})
-
 server.use('/api/books', books);
 server.use('/api/auth', auth);
+server.use('/api/reviews', reviews);
 server.use('/api/docs', express.static(__dirname + '/docs'));
 
 module.exports = server;

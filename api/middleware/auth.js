@@ -18,8 +18,8 @@ const auth = async (req, res, next) => {
         message: 'Invalid/Expired authorization token provided.',
       });
 
-      // TODO: Add roles
       req.role = decoded.role;
+      req.token = req.headers.authorization;
 
       next();
     })
