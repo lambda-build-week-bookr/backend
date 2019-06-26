@@ -16,6 +16,7 @@ const reviewBody = {
   rating: {
     required: true,
     type: 'number',
+    regex: /^[0-5]\.[0-9]/g,
   },
   review: {
     required: false,
