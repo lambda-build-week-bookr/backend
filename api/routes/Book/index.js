@@ -105,6 +105,8 @@ router.get('/author/:id', async (req, res) => {
  *           "Jan Gullberg",
  *           "Peter Hilton"
  *         ],
+ *         "averageRating": 1.5,
+ *         "totalReviews": 1,
  *         "reviews": [
  *           {
  *             "id": 13,

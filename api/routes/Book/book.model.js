@@ -56,6 +56,8 @@ const hydrateBook = async (id) => {
     return {
       ...book,
       authors,
+      averageRating: reviews.reduce((accumulator, current) => accumulator + current.rating, 0) / reviews.length,
+      totalReviews: reviews.length,
       reviews,
     };
   });
