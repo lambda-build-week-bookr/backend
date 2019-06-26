@@ -15,7 +15,7 @@ exports.up = function(knex, Promise) {
         .notNullable();
       table.string('edition')
       table.string('thumbnail')
-      table.string('description', 2048)
+      table.string('description', 10485760)
         .notNullable();
       table.integer('publisher_id')
         .notNullable()
