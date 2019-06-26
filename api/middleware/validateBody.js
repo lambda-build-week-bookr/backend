@@ -25,6 +25,12 @@ const validateBody = keys => async (req, res, next) => {
         });
       }
       
+      if (keys[key].regex && !(req.body[key].match(keys[key].regex))) resolve({
+        status: 'error',
+        error: 'BadValue',
+        message: `Value for \`${key}\` did not match the expected requirements, please reference the documentation.`,
+      });
+      
       if (keys[key].exists) {
         const { database: db, table, column } = keys[key].exists;
         const resource = await db(table).cb(db => {

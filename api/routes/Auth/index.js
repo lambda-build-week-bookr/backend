@@ -17,6 +17,7 @@ const loginBody = {
   email: {
     required: true,
     type: 'string',
+    regex: /^\w+((\.)?\w+)*@\w+((\.)?\w+)*(\.\w{2,3})+/g
   },
   password: {
     required: true,
