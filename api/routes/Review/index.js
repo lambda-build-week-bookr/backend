@@ -23,12 +23,52 @@ const reviewBody = {
   },
 };
 
-// ID is the book id
+/**
+ * @api {post} /reviews/:book_id Create a review
+ * @apiName Create Review
+ * @apiGroup Reviews
+ * @apiDescription NOTE: This request ID is the id of the book you want to add the review to
+ *
+ * @apiHeader {string} Authorization Users token provided on registration/login
+ * @apiParam {float} rating The user's rating for the book.
+ * @apiParam {string} [review] The user's optional review content for the given book.
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {string} message Informative message indicating action(s) taken.
+ * @apiSuccess {array} review A review with the requested id.
+ * @apiSuccess {integer} review.id The review id.
+ * @apiSuccess {float} reviews.rating Star rating (1-5) of the review.
+ * @apiSuccess {string} review.content Body content of the review.
+ * 
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *       "status": "success",
+ *       "message": "Successfully added a review to book with id (4)",
+ *       "review": {
+ *         "id": 14,
+ *         "rating": 1.5,
+ *         "content": "I've read better"
+ *       }
+ *     }
+ *
+ * @apiUse MissingAuth
+ * @apiUse InvalidCreds
+ * 
+ * @apiError NotFound Requested resource was not found.
+ * @apiErrorExample NotFound-Response
+ *  HTTP/1.1 404 Not Found
+ *    {
+ *      "status": "error",
+ *      "error": "NotFound",
+ *      "message": "No resource was found with the requested id (4)",
+ *    }
+ * 
+ */
 router.post('/:id', validateId(bookDB), validateBody(reviewBody), async (req, res) => {
   const { resource: { id: book_id }, token } = req;
   const { subject: user_id } = jwt.decode(token);
   try {
-    // decode jwt for user id
     const { id } = await db.add({
       ...req.body,
       book_id,
@@ -48,10 +88,49 @@ router.post('/:id', validateId(bookDB), validateBody(reviewBody), async (req, re
   }
 });
 
-// ID is the review id
+/**
+ * @api {delete} /reviews/:review_id Delete a review
+ * @apiName Delete Review
+ * @apiGroup Reviews
+ * @apiDescription NOTE: This request ID is the id of the review you want to delete.
+ *
+ * @apiHeader {string} Authorization Users token provided on registration/login
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {string} message Informative message indicating action(s) taken.
+ * @apiSuccess {array} review A review with the requested id.
+ * @apiSuccess {integer} review.id The review id.
+ * @apiSuccess {float} reviews.rating Star rating (1-5) of the review.
+ * @apiSuccess {string} review.content Body content of the review.
+ * 
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *       "status": "success",
+ *       "message": "You successfully deleted a comment with id (14)",
+ *       "review": {
+ *         "id": 14,
+ *         "review": "I've read better",
+ *         "rating": 1.5
+ *       }
+ *     }
+ *
+ * @apiUse MissingAuth
+ * @apiUse InvalidCreds
+ * 
+ * @apiError NotFound Requested resource was not found.
+ * @apiErrorExample NotFound-Response
+ *  HTTP/1.1 404 Not Found
+ *    {
+ *      "status": "error",
+ *      "error": "NotFound",
+ *      "message": "No resource was found with the requested id (4)",
+ *    }
+ * 
+ */
 router.delete('/:id', validateId(db), async (req, res) => {
-  const { subject: reqUserId, role } = jwt.decode(req.token);
   const { user_id, id, review, rating } = req.resource;
+  const { subject: reqUserId, role } = jwt.decode(req.token);
 
   if (reqUserId !== user_id && role !== 'admin') return res.status(403).json({
     status: 'error',
@@ -63,7 +142,7 @@ router.delete('/:id', validateId(db), async (req, res) => {
 
   res.json({
     status: 'success',
-    message: `You successfully deleted a comment with id (${id})`,
+    message: `You successfully deleted a review with id (${id})`,
     review: {
       id,
       review,

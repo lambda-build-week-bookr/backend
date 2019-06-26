@@ -22,27 +22,27 @@ router.use(auth);
  * @apiSuccess {integer} book.id The book id.
  * @apiSuccess {string} book.title The book title.
  * @apiSuccess {string} book.isbn The 10 digit ISBN.
- * @apiSuccess {string} book.publisher The name of the publishing company.
  * @apiSuccess {string} book.cover A URL with a cover image for the book.
- * @apiSuccess {string} book.edition A short string regarding the edition of the book.
+ * @apiSuccess {string} book.thumbnail A URL with a thumbnail image for the book.
  * @apiSuccess {string} book.description A long string with the books summary/description.
+ * @apiSuccess {string} book.publisher The name of the publishing company.
  *
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *    {
- *      "status": "success",
- *      "books": [
- *        {
- *          "id": 1,
- *          "title": "Book Title",
- *          "isbn": "1234567890",
- *          "publisher": "Publisher Name",
- *          "cover": "https://link.to/image.png",
- *          "edition": "5th Edition",
- *          "description": "This is a generic book description.",
- *        },
- *      ],
- *    }
+ *       "status": "success",
+ *       "books": [
+ *         {
+ *           "id": 1,
+ *           "title": "The Math Book",
+ *           "isbn": "9781402757969",
+ *           "cover": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3",
+ *           "thumbnail": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2",
+ *           "description": "This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \"ant odometers\" and moving through time to our modern-day quest for new dimensions.",
+ *           "publisher": "Sterling Publishing Company, Inc."
+ *         },
+ *       ]
+ *     }
  *
  * @apiUse MissingAuth
  * @apiUse InvalidCreds
@@ -79,10 +79,10 @@ router.get('/author/:id', async (req, res) => {
  * @apiSuccess {integer} book.id The book id.
  * @apiSuccess {string} book.title The book title.
  * @apiSuccess {string} book.isbn The 10 digit ISBN.
- * @apiSuccess {string} book.publisher The name of the publishing company.
  * @apiSuccess {string} book.cover A URL with a cover image for the book.
- * @apiSuccess {string} book.edition A short string regarding the edition of the book.
  * @apiSuccess {string} book.description A long string with the books summary/description.
+ * @apiSuccess {string} book.publisher The name of the publishing company.
+ * @apiSuccess {array} book.authors A list of authors.
  * @apiSuccess {array} book.reviews An array of reviews for the book.
  * @apiSuccess {string} book.reviews.id The review id.
  * @apiSuccess {string} book.reviews.username Username of the reviewer.
@@ -92,26 +92,29 @@ router.get('/author/:id', async (req, res) => {
  * @apiSuccessExample Success-Response:
  *  HTTP/1.1 200 OK
  *    {
- *      "status": "success",
- *      "book": {
- *        "id": 1,
- *        "title": "Book Title",
- *        "isbn": "1234567890",
- *        "publisher": "Publisher Name",
- *        "cover": "https://link.to/image.png",
- *        "edition": "5th Edition",
- *        "description": "This is a generic book description.",
- *        "authors": ["John R. Taylor"],
- *        "reviews": [
- *          {
- *            "id": 1,
- *            "username": "theProf",
- *            "rating": 5.0,
- *            "review": "This book is the GOAT. I consistently recommend it to both students and professors!",
- *          },
- *        ],
- *      },
- *    }
+ *       "status": "success",
+ *       "book": {
+ *         "id": 12,
+ *         "title": "Mathematics",
+ *         "isbn": "9780393040029",
+ *         "cover": "https://books.google.com/books/content?id=E09fBi9StpQC&printsec=frontcover&img=1&zoom=3",
+ *         "thumbnail": "https://books.google.com/books/content?id=E09fBi9StpQC&printsec=frontcover&img=1&zoom=2",
+ *         "description": "Traces the history of mathematics and numeration, and reviews symbolic logic, set theory, series, equations, functions, geometry, trigonometry, vector analysis, fractals, matrices, calculus, probability theory, and differential equations",
+ *         "publisher": "W. W. Norton & Company",
+ *         "authors": [
+ *           "Jan Gullberg",
+ *           "Peter Hilton"
+ *         ],
+ *         "reviews": [
+ *           {
+ *             "id": 13,
+ *             "username": "admin",
+ *             "rating": 1.5,
+ *             "review": "I've read better"
+ *           }
+ *         ]
+ *       }
+ *     }
  *
  * @apiUse MissingAuth
  * @apiUse InvalidCreds
