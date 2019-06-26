@@ -16,32 +16,16 @@ const validateBody = keys => async (req, res, next) => {
         });
       }
 
-      
       if (keys[key].regex && keys[key].type === 'number') {
-        log.warn({
-          regex: keys[key].regex,
-          type: keys[key].type,
-          key: req.body[key],
-        });
         const tempNumber = Number.isInteger(req.body[key]) ? req.body[key] + ".0" : req.body[key].toString();
-        console.log(tempNumber, keys[key].regex);
         if (!tempNumber.match(keys[key].regex)) return resolve({
           error: 'BadValue',
           message: `Value for \`${key}\` did not match the expected requirements, please reference the documentation.`,
         });
-      }
-
-      if (keys[key].regex && !(req.body[key].match(keys[key].regex))) {
-        log.warn({
-          regex: keys[key].regex,
-          type: keys[key].type,
-          key: req.body[key],
-        });
-        return resolve({
-          error: 'BadValue',
-          message: `Value for \`${key}\` did not match the expected requirements, please reference the documentation.`,
-        });
-      }
+      } else if (keys[key].regex && !(req.body[key].match(keys[key].regex))) return resolve({
+        error: 'BadValue',
+        message: `Value for \`${key}\` did not match the expected requirements, please reference the documentation.`,
+      });
 
       if (keys[key].exists) {
         const { database: db, table, column } = keys[key].exists;

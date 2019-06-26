@@ -85,6 +85,13 @@ router.post('/:id', validateId(bookDB), validateBody(reviewBody), async (req, re
       },
     });
   } catch (error) {
+    if (error.message.match(/unique constraint/i)) {
+      return res.status(400).json({
+        status: 'error',
+        error: 'NonUnique',
+        message: `Provided \`user_id\` and \`book_id\` must be unique: [(${user_id}), (${book_id})] already exists in the database.`,
+      });
+    }
     res.status(500).json(await log.err(error));
   }
 });

@@ -50,17 +50,18 @@ exports.up = function(knex, Promise) {
       table.float('rating')
         .notNullable();
       table.integer('user_id')
-      .notNullable()
-      .references('id')
-      .inTable('user')
-      .onDelete('RESTRICT')
-      .onUpdate('CASCADE');
+        .notNullable()
+        .references('id')
+        .inTable('user')
+        .onDelete('RESTRICT')
+        .onUpdate('CASCADE');
       table.integer('book_id')
-      .notNullable()
-      .references('id')
-      .inTable('book')
-      .onDelete('RESTRICT')
-      .onUpdate('CASCADE');
+        .notNullable()
+        .references('id')
+        .inTable('book')
+        .onDelete('RESTRICT')
+        .onUpdate('CASCADE');
+      table.unique(['user_id', 'book_id']);
     })
 };
 
