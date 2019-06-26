@@ -12,10 +12,11 @@ describe('Books', () => {
   });
 
   beforeEach(async () => {
-    await cleaner.clean(db, {
-      mode: 'truncate',
-      ignoreTables: ['knex_migrations', 'knex_migrations_lock'],
-    });
+    // await cleaner.clean(db, {
+    //   mode: 'truncate',
+    //   ignoreTables: ['knex_migrations', 'knex_migrations_lock'],
+    // });
+    // await db('books').truncate();
   });
 
   it('should work', () => {

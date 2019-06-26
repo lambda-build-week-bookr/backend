@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('./book.model');
 const auth = require('../../middleware/auth');
+const validateId = require('../../middleware/validateId');
 const log = require('../../../utils/logger');
 
 router.use(auth);
@@ -50,7 +51,7 @@ router.use(auth);
  */
 router.get('/', async (req, res) => {
   try {
-    const books = await db.get();
+    const books = await db.getWithPublisher();
     res.json({
       status: 'success',
       books,
@@ -60,8 +61,18 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.get('/author/:id', async (req, res) => {
+  try {
+    const books = await db.hydrateBook(req.params.id);
+    res.json(books);
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+})
+
+//TODO: GET /authors/:id
+
 /**
- * @apiIgnore Not implemented yet.
  * @api {get} /books/:id Get a book by id
  * @apiName Book
  * @apiGroup Books
@@ -120,5 +131,30 @@ router.get('/', async (req, res) => {
  *    }
  * 
  */
+router.get('/:id', validateId(db), async (req, res) => {
+  try {
+    const book = await db.hydrateBook(req.resource.id);
+    res.json({
+      status: 'success',
+      book,
+    });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+});
+
+//TODO: DELETE /:id
+
+router.delete('/:id', validateId(db), async (req, res) => {
+  try {
+    const header = req.headers.authorization;
+    res.json({
+      header,
+      id: req.params.id,
+    });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+});
 
 module.exports = router;

@@ -19,7 +19,7 @@ const auth = async (req, res, next) => {
       });
 
       // TODO: Add roles
-      // req.roles= decoded.roles;
+      req.role = decoded.role;
 
       next();
     })
