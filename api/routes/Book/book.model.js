@@ -12,8 +12,13 @@ const getWithPublisher = () => {
         'book.description',
         'publisher.name as publisher',
       ])
+      .avg('review.rating as averageRating')
+      .groupBy('book.id')
       .leftOuterJoin('publisher', {
         'book.publisher_id': 'publisher.id',
+      })
+      .leftOuterJoin('review', {
+        'book.id': 'review.book_id',
       });
     return books;
   });
