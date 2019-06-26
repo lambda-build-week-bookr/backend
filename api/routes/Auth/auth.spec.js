@@ -135,6 +135,7 @@ describe('Authentication', () => {
         message: `Successfully registered user with email ${user.email}`,
         user: {
           username: 'Taz',
+          role: 'user',
           email: user.email,
           token: request.body.user.token,
         },
@@ -268,6 +269,7 @@ describe('Authentication', () => {
         user: {
           username: 'Taz',
           email: user.email,
+          role: 'user',
           token: request.body.user.token,
         },
       });

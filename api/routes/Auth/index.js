@@ -80,9 +80,16 @@ router.post('/register', validateBody(registerBody), async (req, res) => {
     await db.add({
       ...user,
       password: hash,
+      role: 'user',
     });
 
-    const token = generateToken(user);
+    const { id } = await db.getBy({ email: user.email }).first();
+
+    const token = generateToken({
+      ...user,
+      id,
+      role: 'user',
+    });
 
     res.status(201).json({
       status: 'success',
@@ -90,6 +97,7 @@ router.post('/register', validateBody(registerBody), async (req, res) => {
       user: {
         username: user.username,
         email: user.email,
+        role: 'user',
         token,
       }
     });
@@ -164,6 +172,7 @@ router.post('/login', validateBody(loginBody), async (req, res) => {
       user: {
         username: user.username,
         email: user.email,
+        role: user.role,
         token,
       },
     });

@@ -16,7 +16,7 @@ describe('Books', () => {
     //   mode: 'truncate',
     //   ignoreTables: ['knex_migrations', 'knex_migrations_lock'],
     // });
-    // await db('books').truncate();
+    await db('book').truncate();
   });
 
   it('should work', () => {

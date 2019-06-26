@@ -1,11 +1,10 @@
-// GET / return list of books
-// GET /:id return single book
-
 const express = require('express');
+const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 const db = require('./book.model');
 const auth = require('../../middleware/auth');
+const access = require('../../middleware/access');
 const validateId = require('../../middleware/validateId');
 const log = require('../../../utils/logger');
 
@@ -143,14 +142,13 @@ router.get('/:id', validateId(db), async (req, res) => {
   }
 });
 
-//TODO: DELETE /:id
-
-router.delete('/:id', validateId(db), async (req, res) => {
+router.delete('/:id', validateId(db), access('admin'), async (req, res) => {
   try {
-    const header = req.headers.authorization;
+    await db.remove(req.resource.id);
     res.json({
-      header,
-      id: req.params.id,
+      status: 'success',
+      message: `Successfully delete a book with the id of (${req.resource.id})`,
+      book: req.resource,
     });
   } catch (error) {
     res.status(500).json(await log.err(error));
