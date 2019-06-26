@@ -143,7 +143,6 @@ describe('Authentication', () => {
 
       const users = await db('user');
       const length = (users.length === 1) || (users.length === 2) ? true : false;
-      console.log(users.length);
       expect(length).toBeTruthy();
     });
 

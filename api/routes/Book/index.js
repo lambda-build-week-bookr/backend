@@ -3,9 +3,11 @@ const jwt = require('jsonwebtoken');
 
 const router = express.Router();
 const db = require('./book.model');
+const reviewDB = require('../Review/review.model');
 const auth = require('../../middleware/auth');
 const access = require('../../middleware/access');
 const validateId = require('../../middleware/validateId');
+const validateBody = require('../../middleware/validateBody');
 const log = require('../../../utils/logger');
 
 router.use(auth);
@@ -60,16 +62,48 @@ router.get('/', async (req, res) => {
   }
 });
 
+//TODO: GET /authors/:id
 router.get('/author/:id', async (req, res) => {
+  res.json({
+    message: "Route coming soon.",
+  });
+});
+
+const reviewBody = {
+  rating: {
+    required: true,
+    type: 'number',
+  },
+  review: {
+    required: false,
+    type: 'string',
+  },
+};
+
+router.post('/:id/reviews', validateId(db), validateBody(reviewBody), async (req, res) => {
+  const { id: book_id } = req.resource;
+  const { authorization } = req.headers;
+  const { subject: user_id } = jwt.decode(authorization);
   try {
-    const books = await db.hydrateBook(req.params.id);
-    res.json(books);
+    // decode jwt for user id
+    await reviewDB.add({
+      ...req.body,
+      book_id,
+      user_id,
+    });
+    res.json({
+      status: 'success',
+      message: `Successfully add a review to book with id ${book_id}`,
+      review: {
+        rating: req.body.rating,
+        content: req.body.review,
+      },
+    });
   } catch (error) {
     res.status(500).json(await log.err(error));
   }
 })
 
-//TODO: GET /authors/:id
 
 /**
  * @api {get} /books/:id Get a book by id

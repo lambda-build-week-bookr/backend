@@ -46,7 +46,7 @@ exports.up = function(knex, Promise) {
     })
     .createTable('review', table => {
       table.increments();
-      table.string('review')
+      table.text('review')
       table.float('rating')
         .notNullable();
       table.integer('user_id')
