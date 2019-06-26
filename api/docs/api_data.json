@@ -691,6 +691,12 @@
           {
             "group": "Error 4xx",
             "optional": false,
+            "field": "NonUnique",
+            "description": "<p>Unique constraint for this request was not met</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
             "field": "NotFound",
             "description": "<p>Requested resource was not found.</p>"
           },
@@ -709,6 +715,11 @@
         ]
       },
       "examples": [
+        {
+          "title": "NonUnique-Response",
+          "content": "HTTP/1.1 400 Bad Request\n  {\n    \"status\": \"error\",\n    \"error\": \"NonUnique\",\n    \"message\": \"Provided `user_id` and `book_id` must be unique: [(1), (2)] already exists in the database.\",\n  }",
+          "type": "json"
+        },
         {
           "title": "NotFound-Response",
           "content": "HTTP/1.1 404 Not Found\n  {\n    \"status\": \"error\",\n    \"error\": \"NotFound\",\n    \"message\": \"No resource was found with the requested id (4)\",\n  }",
@@ -801,6 +812,126 @@
         {
           "title": "Success-Response:",
           "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"message\": \"You successfully deleted a comment with id (14)\",\n     \"review\": {\n       \"id\": 14,\n       \"review\": \"I've read better\",\n       \"rating\": 1.5\n     }\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NotFound",
+            "description": "<p>Requested resource was not found.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "MissingAuth",
+            "description": "<p>No Authorization header was sent with the request.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidCreds",
+            "description": "<p>Token sent with the request is invalid or expired.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "NotFound-Response",
+          "content": "HTTP/1.1 404 Not Found\n  {\n    \"status\": \"error\",\n    \"error\": \"NotFound\",\n    \"message\": \"No resource was found with the requested id (4)\",\n  }",
+          "type": "json"
+        },
+        {
+          "title": "MissingAuth-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": \"error\",\n  \"error\": \"MissingAuth\",\n  \"message\": \"Please provide a token in the `Authorization` header.\",\n}",
+          "type": "json"
+        },
+        {
+          "title": "InvalidCreds-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n  \"status\": \"error\",\n  \"error\": \"InvalidCreds\",\n  \"message\": \"Invalid/Expired authorization token provided.\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/Review/index.js",
+    "groupTitle": "Reviews"
+  },
+  {
+    "type": "put",
+    "url": "/reviews/:review_id",
+    "title": "Edit a review",
+    "name": "Edit_Review",
+    "group": "Reviews",
+    "description": "<p>NOTE: This request ID is the id of the review you want to edit.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users token provided on registration/login</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status of the request.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "message",
+            "description": "<p>Informative message indicating action(s) taken.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "array",
+            "optional": false,
+            "field": "review",
+            "description": "<p>A review with the requested id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "integer",
+            "optional": false,
+            "field": "review.id",
+            "description": "<p>The review id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "float",
+            "optional": false,
+            "field": "reviews.rating",
+            "description": "<p>Updated star rating (1-5) of the review.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "review.content",
+            "description": "<p>Updated body content of the review.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"message\": \"You successfully deleted a comment with id (14)\",\n     \"review\": {\n       \"id\": 14,\n       \"review\": \"I've read better, but it is okay as far so books.\",\n       \"rating\": 2.5\n     }\n   }",
           "type": "json"
         }
       ]

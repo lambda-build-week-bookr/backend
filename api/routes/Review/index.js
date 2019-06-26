@@ -56,6 +56,15 @@ const reviewBody = {
  * @apiUse MissingAuth
  * @apiUse InvalidCreds
  * 
+ * @apiError NonUnique Unique constraint for this request was not met
+ * @apiErrorExample NonUnique-Response
+ *  HTTP/1.1 400 Bad Request
+ *    {
+ *      "status": "error",
+ *      "error": "NonUnique",
+ *      "message": "Provided `user_id` and `book_id` must be unique: [(1), (2)] already exists in the database.",
+ *    }
+ * 
  * @apiError NotFound Requested resource was not found.
  * @apiErrorExample NotFound-Response
  *  HTTP/1.1 404 Not Found
@@ -157,6 +166,59 @@ router.delete('/:id', validateId(db), async (req, res) => {
       rating
     },
   });
-})
+});
+
+/**
+ * @api {put} /reviews/:review_id Edit a review
+ * @apiName Edit Review
+ * @apiGroup Reviews
+ * @apiDescription NOTE: This request ID is the id of the review you want to edit.
+ *
+ * @apiHeader {string} Authorization Users token provided on registration/login
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {string} message Informative message indicating action(s) taken.
+ * @apiSuccess {array} review A review with the requested id.
+ * @apiSuccess {integer} review.id The review id.
+ * @apiSuccess {float} reviews.rating Updated star rating (1-5) of the review.
+ * @apiSuccess {string} review.content Updated body content of the review.
+ * 
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *       "status": "success",
+ *       "message": "You successfully deleted a comment with id (14)",
+ *       "review": {
+ *         "id": 14,
+ *         "review": "I've read better, but it is okay as far so books.",
+ *         "rating": 2.5
+ *       }
+ *     }
+ *
+ * @apiUse MissingAuth
+ * @apiUse InvalidCreds
+ * 
+ * @apiError NotFound Requested resource was not found.
+ * @apiErrorExample NotFound-Response
+ *  HTTP/1.1 404 Not Found
+ *    {
+ *      "status": "error",
+ *      "error": "NotFound",
+ *      "message": "No resource was found with the requested id (4)",
+ *    }
+ * 
+ */
+router.put('/:id', validateId(db), async (req, res) => {
+  try {
+    const { id, review, rating } = await db.update(req.resource.id, req.body);
+    res.json({
+      id,
+      review,
+      rating
+    });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+});
 
 module.exports = router;
