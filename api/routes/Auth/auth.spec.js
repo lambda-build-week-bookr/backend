@@ -20,6 +20,7 @@ describe('Authentication', () => {
   beforeEach(async () => {
     await cleaner.clean(db, {
       mode: 'truncate',
+      ignoreTables: ['knex_migrations', 'knex_migrations_lock'],
     });
   });
 

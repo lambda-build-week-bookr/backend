@@ -19,6 +19,11 @@ exports.seed = (knex, Promise) => {
           email: 'sunil@gmail.com',
           password: bcrypt.hashSync('hello', 10),
         },
+        {
+          username: 'timi',
+          email: 'timi@test.com',
+          password: bcrypt.hashSync('timi', 10),
+        },
       ]);
     });
 };
