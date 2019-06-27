@@ -9,6 +9,8 @@ const auth = require('../../middleware/auth');
 const access = require('../../middleware/access');
 const validateId = require('../../middleware/validateId');
 const log = require('../../../utils/logger');
+const parser = require('../../../utils/parser');
+const getBook = require('../../../utils/getBook');
 
 router.use(auth);
 
@@ -65,6 +67,22 @@ router.get('/', async (req, res) => {
     res.status(500).json(await log.err(error));
   }
 });
+
+router.post('/:id', access('admin'), async (req, res) => {
+  try {
+    const data = await getBook(req.params.id);
+    const book= await db.addBook(data);
+    res.json({
+      status: 'success',
+      book: {
+        gid: req.params.id,
+        ...book,
+      },
+    });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+})
 
 /**
  * @api {get} /books/author/:author_id Get books by author
@@ -249,6 +267,15 @@ router.get('/:id', validateId(db), async (req, res) => {
       status: 'success',
       book,
     });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+});
+
+router.get('/search/:query', access('admin'), async (req, res) => {
+  try {
+    const books = await parser(req.params.query);
+    res.json(books);
   } catch (error) {
     res.status(500).json(await log.err(error));
   }

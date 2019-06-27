@@ -141,10 +141,56 @@ const getCategoryBooks = async (id) => {
   });
 }
 
+const addBook = (data) => {
+  return db.cb(async (db) => {
+
+    console.log(data);
+
+    const publisherExists = await db('publisher').where({ name: data.publisher }).first();
+    const publisherId = (publisherExists ? [publisherExists.id] : await db('publisher').insert({ name: data.publisher }))[0];
+
+    const authorIds = await Promise.all(data.authors.map(async (name) => {
+      const authorExists = await db('author').where({ name }).first();
+      return (authorExists ? [authorExists.id] : await db('author').insert({ name }))[0];
+    }));
+
+    const categoryIds = await Promise.all(data.categories.map(async (name) => {
+      const categoryExists = await db('category').where({ name }).first();
+      return (categoryExists ? [categoryExists.id] : await db('category').insert({ name }))[0];
+    }));
+
+    const bookId = await db('book').insert({
+      title: data.title,
+      isbn: data.isbn,
+      cover: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=3`,
+      thumbnail: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=2`,
+      description: data.description,
+      publisher_id: publisherId,
+    });
+    
+    await Promise.all(
+      authorIds.map(async (authorId) => {
+        return await db('book_author').insert({
+          book_id: bookId[0],
+          author_id: authorId,
+        });
+      }),
+      categoryIds.forEach(async (categoryId) => {
+        return await db('book_category').insert({
+          book_id: bookId[0],
+          category_id: categoryId,
+        });
+      })
+    );
+    return data;
+  });
+};
+
 module.exports = {
   ...db,
   getWithPublisher,
   getAuthorBooks,
   getCategoryBooks,
   hydrateBook,
+  addBook,
 };

@@ -1,6 +1,7 @@
-const axios = require('axios');
-
-const key = process.env.BOOK_KEY;
+require('dotenv').config();
+const axios = require('axios').create({
+  headers: {'key': process.env.API_KEY}
+});
 
 // Parses google books data
 const parser = async (subject) => {
@@ -9,7 +10,7 @@ const parser = async (subject) => {
 
   const volumes = `https://www.googleapis.com/books/v1/volumes?q=${subject}`;
   const { data: { items } } = await axios.get(volumes);
-  const books = items.map(({ id, volumeInfo }) => {
+  const books = items.filter(({ volumeInfo: { description, categories } }) => (description && categories)).map(({ id, volumeInfo }) => {
     const {
       title,
       authors,
@@ -34,6 +35,7 @@ const parser = async (subject) => {
     }
 
     return {
+      id,
       title,
       authors,
       identifiers,
