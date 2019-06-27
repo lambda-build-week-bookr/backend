@@ -70,10 +70,39 @@ const hydrateBook = async (id) => {
       reviews,
     };
   });
+};
+
+const getAuthorBooks = async (id) => {
+  return db.cb(async (db) => {
+    const books = await db('book')
+      .select([
+        'book.id',
+        'book.title',
+        'book.isbn',
+        'book.cover',
+        'book.thumbnail',
+      ])
+      .avg('review.rating as averageRating')
+      .groupBy(
+        'book.id',
+        'book.title',
+        'book.isbn',
+        'book.cover',
+        'book.thumbnail'
+      )
+      .leftOuterJoin('book_author', { 'book_author.book_id': 'book.id' })
+      .leftOuterJoin('review', { 'review.book_id': 'book.id' })
+      .where({ 'book_author.author_id': id });
+    return books.map(book => ({
+      ...book,
+      averageRating: book.averageRating ? Number(book.averageRating.toFixed(2)) : null,
+    }));
+  });
 }
 
 module.exports = {
   ...db,
   getWithPublisher,
+  getAuthorBooks,
   hydrateBook,
 };

@@ -24,6 +24,13 @@ const reviewBody = {
   },
 };
 
+router.get('/user/:id', async (req, res) => {
+  //TODO THIS THING
+  res.json({
+    message: "Endpoint coming soon!",
+  });
+})
+
 /**
  * @api {post} /reviews/:book_id Create a review
  * @apiName Create Review
