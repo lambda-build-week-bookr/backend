@@ -197,13 +197,64 @@ router.get('/:id', validateId(db), async (req, res) => {
   }
 });
 
+/**
+ * @api {get} /books/author/:author_id Get books by author
+ * @apiName AuthorBooks
+ * @apiGroup Books
+ *
+ * @apiHeader {string} Authorization Users token provided on registration/login
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {array} books A list of books by the author id.
+ * @apiSuccess {integer} book.id The book id.
+ * @apiSuccess {string} book.title The book title.
+ * @apiSuccess {string} book.isbn The 10 digit ISBN.
+ * @apiSuccess {string} book.cover A URL with a cover image for the book.
+ * @apiSuccess {string} book.thumbnail A URL with a thumbnail image for the book.
+ * @apiSuccess {float} book.averageRating Average rating for this book.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *       "status": "success",
+ *       "message": "Successfully delete a book with the id of (1)",
+ *       "book": {
+ *         "id": 1,
+ *         "title": "The Math Book",
+ *         "isbn": "9781402757969",
+ *         "cover": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3",
+ *         "thumbnail": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2",
+ *         "description": "This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \"ant odometers\" and moving through time to our modern-day quest for new dimensions.",
+ *       }
+ *     }
+ *
+ * @apiUse MissingAuth
+ * @apiUse InvalidCreds
+ * 
+ * @apiError NotFound Requested resource was not found.
+ * @apiErrorExample NotFound-Response
+ *  HTTP/1.1 404 Not Found
+ *    {
+ *      "status": "error",
+ *      "error": "NotFound",
+ *      "message": "No resource was found with the requested id (23)",
+ *    }
+ */
 router.delete('/:id', validateId(db), access('admin'), async (req, res) => {
+  const { id, title, isbn, cover, thumbnail, description } = req.resource;
   try {
     await db.remove(req.resource.id);
     res.json({
       status: 'success',
-      message: `Successfully delete a book with the id of (${req.resource.id})`,
-      book: req.resource,
+      message: `Successfully delete a book with the id of (${id})`,
+      book: {
+        id,
+        title,
+        isbn,
+        cover,
+        thumbnail,
+        description,
+      },
     });
   } catch (error) {
     res.status(500).json(await log.err(error));
