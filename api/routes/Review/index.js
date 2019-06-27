@@ -61,14 +61,26 @@ const reviewBody = {
  * 
  */
 router.get('/user/:id', async (req, res) => {
-  const reviews = await db.getBy({
-    user_id: req.params.id,
-  });
+  const { subject: reqUserId, role } = jwt.decode(req.token);
 
-  res.json({
-    status: 'success',
-    reviews: reviews.map(({ id, review, rating }) => ({ id, review, rating })),
-  });
+  try {
+    if (reqUserId !== Number(req.params.id) && role !== 'admin') return res.status(403).json({
+      status: 'error',
+      error: 'InvalidAuth',
+      message: 'You do not have access to this resource.',
+    });
+  
+    const reviews = await db.getBy({
+      user_id: req.params.id,
+    });
+  
+    res.json({
+      status: 'success',
+      reviews: reviews.map(({ id, review, rating }) => ({ id, review, rating })),
+    });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
 });
 
 /**
