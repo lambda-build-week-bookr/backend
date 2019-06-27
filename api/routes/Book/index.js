@@ -243,7 +243,7 @@ router.get('/:id', validateId(db), async (req, res) => {
 router.delete('/:id', validateId(db), access('admin'), async (req, res) => {
   const { id, title, isbn, cover, thumbnail, description } = req.resource;
   try {
-    await db.remove(req.resource.id);
+    await db.remove(id);
     res.json({
       status: 'success',
       message: `Successfully delete a book with the id of (${id})`,
