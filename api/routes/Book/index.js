@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('./book.model');
 const authorDB = require('../../../data/models')('author');
+const categoryDB = require('../../../data/models')('category');
 
 const auth = require('../../middleware/auth');
 const access = require('../../middleware/access');
@@ -112,6 +113,62 @@ router.get('/', async (req, res) => {
 router.get('/author/:id', validateId(authorDB), async (req, res) => {
   try {
     const books = await db.getAuthorBooks(req.params.id);
+    res.json({
+      status: 'success',
+      books,
+    });
+  } catch (error) {
+    res.status(500).json(await log.err(error));
+  }
+});
+
+/**
+ * @api {get} /books/category/:category_id Get books by category
+ * @apiName CategoryBooks
+ * @apiGroup Books
+ *
+ * @apiHeader {string} Authorization Users token provided on registration/login
+ *
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {array} books A list of books by the author id.
+ * @apiSuccess {integer} book.id The book id.
+ * @apiSuccess {string} book.title The book title.
+ * @apiSuccess {string} book.isbn The 10 digit ISBN.
+ * @apiSuccess {string} book.cover A URL with a cover image for the book.
+ * @apiSuccess {string} book.thumbnail A URL with a thumbnail image for the book.
+ * @apiSuccess {float} book.averageRating Average rating for this book.
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *       "status": "success",
+ *       "books": [
+ *         {
+ *           "id": 1,
+ *           "title": "The Math Book",
+ *           "isbn": "9781402757969",
+ *           "cover": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3",
+ *           "thumbnail": "https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2",
+ *           "averageRating" 3.45,
+ *         },
+ *       ]
+ *     }
+ *
+ * @apiUse MissingAuth
+ * @apiUse InvalidCreds
+ * 
+ * @apiError NotFound Requested resource was not found.
+ * @apiErrorExample NotFound-Response
+ *  HTTP/1.1 404 Not Found
+ *    {
+ *      "status": "error",
+ *      "error": "NotFound",
+ *      "message": "No resource was found with the requested id (23)",
+ *    }
+ */
+router.get('/category/:id', validateId(categoryDB), async (req, res) => {
+  try {
+    const books = await db.getCategoryBooks(req.params.id);
     res.json({
       status: 'success',
       books,

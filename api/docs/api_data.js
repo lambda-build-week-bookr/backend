@@ -696,6 +696,139 @@ define({ "api": [
     }
   },
   {
+    "type": "get",
+    "url": "/books/category/:category_id",
+    "title": "Get books by category",
+    "name": "CategoryBooks",
+    "group": "Books",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users token provided on registration/login</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status of the request.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "array",
+            "optional": false,
+            "field": "books",
+            "description": "<p>A list of books by the author id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "integer",
+            "optional": false,
+            "field": "book.id",
+            "description": "<p>The book id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.title",
+            "description": "<p>The book title.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.isbn",
+            "description": "<p>The 10 digit ISBN.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.cover",
+            "description": "<p>A URL with a cover image for the book.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.thumbnail",
+            "description": "<p>A URL with a thumbnail image for the book.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "float",
+            "optional": false,
+            "field": "book.averageRating",
+            "description": "<p>Average rating for this book.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"books\": [\n       {\n         \"id\": 1,\n         \"title\": \"The Math Book\",\n         \"isbn\": \"9781402757969\",\n         \"cover\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3\",\n         \"thumbnail\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2\",\n         \"averageRating\" 3.45,\n       },\n     ]\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NotFound",
+            "description": "<p>Requested resource was not found.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "MissingAuth",
+            "description": "<p>No Authorization header was sent with the request.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidCreds",
+            "description": "<p>Token sent with the request is invalid or expired.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "NotFound-Response",
+          "content": "HTTP/1.1 404 Not Found\n  {\n    \"status\": \"error\",\n    \"error\": \"NotFound\",\n    \"message\": \"No resource was found with the requested id (23)\",\n  }",
+          "type": "json"
+        },
+        {
+          "title": "MissingAuth-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": \"error\",\n  \"error\": \"MissingAuth\",\n  \"message\": \"Please provide a token in the `Authorization` header.\",\n}",
+          "type": "json"
+        },
+        {
+          "title": "InvalidCreds-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n  \"status\": \"error\",\n  \"error\": \"InvalidCreds\",\n  \"message\": \"Invalid/Expired authorization token provided.\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/Book/index.js",
+    "groupTitle": "Books"
+  },
+  {
     "type": "delete",
     "url": "/books/:book_id",
     "title": "Delete book of author",
@@ -990,7 +1123,7 @@ define({ "api": [
       "examples": [
         {
           "title": "NonUnique-Response",
-          "content": "HTTP/1.1 400 Bad Request\n  {\n    \"status\": \"error\",\n    \"error\": \"NonUnique\",\n    \"message\": \"Provided `user_id` and `book_id` must be unique: [(1), (2)] already exists in the database.\",\n  }",
+          "content": "HTTP/1.1 400 Bad Request\n  {\n    \"status\": \"error\",\n    \"error\": \"NonUnique\",\n    \"message\": \"Provided `user_id` and `book_id` must be unique: [user.id(1), book.id(2)] already exists in the database.\",\n  }",
           "type": "json"
         },
         {
