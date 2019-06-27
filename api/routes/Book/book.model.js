@@ -44,14 +44,17 @@ const hydrateBook = async (id) => {
     .leftOuterJoin('publisher', {
       'book.publisher_id': 'publisher.id',
     }).first();
+
     const authors = await db('book_author')
       .select([
+        'author.id',
         'author.name',
       ])
       .where({ book_id: id })
-      .leftOuterJoin('author', { 'author.id': 'book_author.author_id' })
-      .reduce((acc, { name }) => [...acc, name], []);
-    const reviews = await db('review')
+      .leftOuterJoin('author', { 'author.id': 'book_author.author_id' });
+      // .reduce((acc, { name }) => [...acc, name], []);
+    
+      const reviews = await db('review')
       .select([
         'review.id as id',
         'user.username',
@@ -62,12 +65,22 @@ const hydrateBook = async (id) => {
       .leftOuterJoin('user', {
         'user.id': 'review.user_id',
       });
+
+    const categories = await db('category')
+      .select([
+        'category.id',
+        'category.name'
+      ])
+      .leftOuterJoin('book_category', { 'book_category.category_id': 'category.id' })
+      .where('book_category.book_id', id);
+
     return {
       ...book,
       authors,
       averageRating: Number((reviews.reduce((accumulator, current) => accumulator + current.rating, 0) / reviews.length).toFixed(2)),
       totalReviews: reviews.length,
       reviews,
+      categories,
     };
   });
 };

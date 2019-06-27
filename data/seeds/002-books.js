@@ -4,10 +4,12 @@ exports.seed = async (knex) => {
   // wait for our parser to pull data from Google Books API
   const physics = await parser('physics');
   const math = await parser('mathematics');
+  const javascript = await parser('javascript');
 
   const booksRaw = [
     ...physics,
     ...math,
+    ...javascript,
   ];
 
   const authors = [

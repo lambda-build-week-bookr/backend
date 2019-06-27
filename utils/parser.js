@@ -1,5 +1,7 @@
 const axios = require('axios');
 
+const key = process.env.BOOK_KEY;
+
 // Parses google books data
 const parser = async (subject) => {
   // book endpoint https://www.googleapis.com/books/v1/volumes?q=physics
