@@ -8,14 +8,11 @@
    - **NOTE: IF THE SEED DOES NOT RUN**
    - it is grabbing books from a dynamic endpoint that does not return consistent data.
    - Run the seed a couple of times and it should succeed.
-
-npm run dev
-npm run test
+1. `npm run dev`
+1. `npm run test`
 
 generate api docs
 npm run docs
+goto localhost:4444/api/docs for endpoint documentation
 
-####asdfasdf
-
-
-I did not have extra time for additional validation beyond a couple of basic checks for database requirements. 
+I did not have extra time for additional seed validation beyond a couple of basic checks for database requirements. 
