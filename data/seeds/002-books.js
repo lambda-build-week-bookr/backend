@@ -15,8 +15,9 @@ exports.seed = async (knex) => {
   const authors = [
     ...new Set([
       ...booksRaw.reduce((accumulator, { authors }) => {
-        if (authors) authors.forEach(name => accumulator.push(name));
-        return accumulator;
+        // if (authors) authors.forEach(name => accumulator.push(name));
+        const tempAuthors = authors ? authors : [];
+        return [ ...accumulator, ...tempAuthors ];
       }, []),
     ])
   ];
@@ -61,20 +62,21 @@ exports.seed = async (knex) => {
 
   const categories = [
     ...new Set([
-      ...booksRaw.reduce((accumulator, { categories }) => [ ...accumulator, ...categories ], []),
+      ...booksRaw.reduce((accumulator, { categories }) => {
+        const tempCategories = categories ? categories : [];
+        return [ ...accumulator, ...tempCategories ];
+      }, []),
     ])
   ];
 
-  const bookCategories = booksRaw.reduce((accumulator, { identifiers: { isbn13: isbn}, categories: categories }) => [
+  const bookCategories = booksRaw.reduce((accumulator, { identifiers: { isbn13: isbn}, categories: categoryList }) => [
     ...accumulator,
-    ...categories.map(category => ({
-      book_id: isbnList.indexOf(isbn) + 1,
-      category_id: categories.indexOf(category) + 1,
-    })),
+    ...categoryList.map(category => {
+      return {book_id: isbnList.indexOf(isbn) + 1,
+      category_id: categories.indexOf(category) + 1,}
+    }),
   ], []);
 
-  console.log(categories);
-  
   await knex('author').insert(authors.map(name => ({ name })));
   await knex('category').insert(categories.map(name => ({ name })));
   await knex('publisher').insert(publishers.map(name => ({ name })));
