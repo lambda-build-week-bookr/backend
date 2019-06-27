@@ -198,9 +198,10 @@ router.get('/:id', validateId(db), async (req, res) => {
 });
 
 /**
- * @api {get} /books/author/:author_id Get books by author
- * @apiName AuthorBooks
+ * @api {delete} /books/:book_id Delete book of author
+ * @apiName DeleteBook
  * @apiGroup Books
+ * @apiPermission admin
  *
  * @apiHeader {string} Authorization Users token provided on registration/login
  *

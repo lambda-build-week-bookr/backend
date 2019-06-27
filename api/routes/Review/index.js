@@ -24,16 +24,56 @@ const reviewBody = {
   },
 };
 
+/**
+ * @api {get} /reviews/:user_id Get user reviews
+ * @apiName UserReviews
+ * @apiGroup Reviews
+ * @apiDescription NOTE: This request ID is the id of the user you want to retrieve reviews for.
+ * 
+ * @apiHeader {string} Authorization Users token provided on registration/login
+ * 
+ * @apiSuccess {string} status Status of the request.
+ * @apiSuccess {array} reviews A list of the reviews for the requested user id.
+ * @apiSuccess {integer} review.id The review id.
+ * @apiSuccess {float} reviews.rating Star rating (1-5) of the review.
+ * @apiSuccess {string} review.content Body content of the review.
+ * 
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 200 OK
+ *    {
+ *       "status": "success",
+ *       "reviews": [
+ *         {
+ *           "id": 1,
+ *           "content": "I've read better",
+ *           "rating": 3.33,
+ *         },
+ *         {
+ *           "id": 2,
+ *           "content": "I've read better",
+ *           "rating": 3.33,
+ *         }
+ *       ]
+ *     }
+ * 
+ * @apiUse MissingAuth
+ * @apiUse InvalidCreds
+ * 
+ */
 router.get('/user/:id', async (req, res) => {
-  //TODO THIS THING
-  res.json({
-    message: "Endpoint coming soon!",
+  const reviews = await db.getBy({
+    user_id: req.params.id,
   });
-})
+
+  res.json({
+    status: 'success',
+    reviews: reviews.map(({ id, review, rating }) => ({ id, review, rating })),
+  });
+});
 
 /**
  * @api {post} /reviews/:book_id Create a review
- * @apiName Create Review
+ * @apiName CreateReview
  * @apiGroup Reviews
  * @apiDescription NOTE: This request ID is the id of the book you want to add the review to
  *
@@ -114,7 +154,7 @@ router.post('/:id', validateId(bookDB), validateBody(reviewBody), async (req, re
 
 /**
  * @api {delete} /reviews/:review_id Delete a review
- * @apiName Delete Review
+ * @apiName DeleteReview
  * @apiGroup Reviews
  * @apiDescription NOTE: This request ID is the id of the review you want to delete.
  *
@@ -177,7 +217,7 @@ router.delete('/:id', validateId(db), async (req, res) => {
 
 /**
  * @api {put} /reviews/:review_id Edit a review
- * @apiName Edit Review
+ * @apiName EditReview
  * @apiGroup Reviews
  * @apiDescription NOTE: This request ID is the id of the review you want to edit.
  *

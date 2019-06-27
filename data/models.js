@@ -15,7 +15,7 @@ const get = table => id => {
 }
 
 const getBy = table => filter => {
-  return db(table).where(filter).first();
+  return db(table).where(filter);
 }
 
 const cb = (method) => {

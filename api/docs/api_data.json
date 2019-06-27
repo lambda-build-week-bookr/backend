@@ -379,139 +379,6 @@
   },
   {
     "type": "get",
-    "url": "/books/author/:author_id",
-    "title": "Get books by author",
-    "name": "AuthorBooks",
-    "group": "Books",
-    "header": {
-      "fields": {
-        "Header": [
-          {
-            "group": "Header",
-            "type": "string",
-            "optional": false,
-            "field": "Authorization",
-            "description": "<p>Users token provided on registration/login</p>"
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "status",
-            "description": "<p>Status of the request.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "array",
-            "optional": false,
-            "field": "books",
-            "description": "<p>A list of books by the author id.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "integer",
-            "optional": false,
-            "field": "book.id",
-            "description": "<p>The book id.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "book.title",
-            "description": "<p>The book title.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "book.isbn",
-            "description": "<p>The 10 digit ISBN.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "book.cover",
-            "description": "<p>A URL with a cover image for the book.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "string",
-            "optional": false,
-            "field": "book.thumbnail",
-            "description": "<p>A URL with a thumbnail image for the book.</p>"
-          },
-          {
-            "group": "Success 200",
-            "type": "float",
-            "optional": false,
-            "field": "book.averageRating",
-            "description": "<p>Average rating for this book.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"message\": \"Successfully delete a book with the id of (1)\",\n     \"book\": {\n       \"id\": 1,\n       \"title\": \"The Math Book\",\n       \"isbn\": \"9781402757969\",\n       \"cover\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3\",\n       \"thumbnail\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2\",\n       \"description\": \"This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \\\"ant odometers\\\" and moving through time to our modern-day quest for new dimensions.\",\n     }\n   }",
-          "type": "json"
-        }
-      ]
-    },
-    "error": {
-      "fields": {
-        "Error 4xx": [
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "NotFound",
-            "description": "<p>Requested resource was not found.</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "MissingAuth",
-            "description": "<p>No Authorization header was sent with the request.</p>"
-          },
-          {
-            "group": "Error 4xx",
-            "optional": false,
-            "field": "InvalidCreds",
-            "description": "<p>Token sent with the request is invalid or expired.</p>"
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "NotFound-Response",
-          "content": "HTTP/1.1 404 Not Found\n  {\n    \"status\": \"error\",\n    \"error\": \"NotFound\",\n    \"message\": \"No resource was found with the requested id (23)\",\n  }",
-          "type": "json"
-        },
-        {
-          "title": "MissingAuth-Response:",
-          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": \"error\",\n  \"error\": \"MissingAuth\",\n  \"message\": \"Please provide a token in the `Authorization` header.\",\n}",
-          "type": "json"
-        },
-        {
-          "title": "InvalidCreds-Response:",
-          "content": "HTTP/1.1 401 Unauthorized\n{\n  \"status\": \"error\",\n  \"error\": \"InvalidCreds\",\n  \"message\": \"Invalid/Expired authorization token provided.\",\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "api/routes/Book/index.js",
-    "groupTitle": "Books"
-  },
-  {
-    "type": "get",
     "url": "/books/:id",
     "title": "Get a book by id",
     "name": "Book",
@@ -829,6 +696,146 @@
     }
   },
   {
+    "type": "delete",
+    "url": "/books/:book_id",
+    "title": "Delete book of author",
+    "name": "DeleteBook",
+    "group": "Books",
+    "permission": [
+      {
+        "name": "admin",
+        "title": "Admin role required",
+        "description": "<p>Only users with the role admin can access this endpoint</p>"
+      }
+    ],
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users token provided on registration/login</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status of the request.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "array",
+            "optional": false,
+            "field": "books",
+            "description": "<p>A list of books by the author id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "integer",
+            "optional": false,
+            "field": "book.id",
+            "description": "<p>The book id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.title",
+            "description": "<p>The book title.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.isbn",
+            "description": "<p>The 10 digit ISBN.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.cover",
+            "description": "<p>A URL with a cover image for the book.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "book.thumbnail",
+            "description": "<p>A URL with a thumbnail image for the book.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "float",
+            "optional": false,
+            "field": "book.averageRating",
+            "description": "<p>Average rating for this book.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"message\": \"Successfully delete a book with the id of (1)\",\n     \"book\": {\n       \"id\": 1,\n       \"title\": \"The Math Book\",\n       \"isbn\": \"9781402757969\",\n       \"cover\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=3\",\n       \"thumbnail\": \"https://books.google.com/books/content?id=JrslMKTgSZwC&printsec=frontcover&img=1&zoom=2\",\n       \"description\": \"This book covers 250 milestones in mathematical history, beginning millions of years ago with ancient \\\"ant odometers\\\" and moving through time to our modern-day quest for new dimensions.\",\n     }\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "NotFound",
+            "description": "<p>Requested resource was not found.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "MissingAuth",
+            "description": "<p>No Authorization header was sent with the request.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidCreds",
+            "description": "<p>Token sent with the request is invalid or expired.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "NotFound-Response",
+          "content": "HTTP/1.1 404 Not Found\n  {\n    \"status\": \"error\",\n    \"error\": \"NotFound\",\n    \"message\": \"No resource was found with the requested id (23)\",\n  }",
+          "type": "json"
+        },
+        {
+          "title": "MissingAuth-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": \"error\",\n  \"error\": \"MissingAuth\",\n  \"message\": \"Please provide a token in the `Authorization` header.\",\n}",
+          "type": "json"
+        },
+        {
+          "title": "InvalidCreds-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n  \"status\": \"error\",\n  \"error\": \"InvalidCreds\",\n  \"message\": \"Invalid/Expired authorization token provided.\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/Book/index.js",
+    "groupTitle": "Books"
+  },
+  {
     "success": {
       "fields": {
         "Success 200": [
@@ -860,7 +867,7 @@
     "type": "post",
     "url": "/reviews/:book_id",
     "title": "Create a review",
-    "name": "Create_Review",
+    "name": "CreateReview",
     "group": "Reviews",
     "description": "<p>NOTE: This request ID is the id of the book you want to add the review to</p>",
     "header": {
@@ -1011,7 +1018,7 @@
     "type": "delete",
     "url": "/reviews/:review_id",
     "title": "Delete a review",
-    "name": "Delete_Review",
+    "name": "DeleteReview",
     "group": "Reviews",
     "description": "<p>NOTE: This request ID is the id of the review you want to delete.</p>",
     "header": {
@@ -1131,7 +1138,7 @@
     "type": "put",
     "url": "/reviews/:review_id",
     "title": "Edit a review",
-    "name": "Edit_Review",
+    "name": "EditReview",
     "group": "Reviews",
     "description": "<p>NOTE: This request ID is the id of the review you want to edit.</p>",
     "header": {
@@ -1246,5 +1253,107 @@
     "version": "0.0.0",
     "filename": "api/routes/Review/index.js",
     "groupTitle": "Reviews"
+  },
+  {
+    "type": "get",
+    "url": "/reviews/:user_id",
+    "title": "Get user reviews",
+    "name": "UserReviews",
+    "group": "Reviews",
+    "description": "<p>NOTE: This request ID is the id of the user you want to retrieve reviews for.</p>",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "string",
+            "optional": false,
+            "field": "Authorization",
+            "description": "<p>Users token provided on registration/login</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "status",
+            "description": "<p>Status of the request.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "array",
+            "optional": false,
+            "field": "reviews",
+            "description": "<p>A list of the reviews for the requested user id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "integer",
+            "optional": false,
+            "field": "review.id",
+            "description": "<p>The review id.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "float",
+            "optional": false,
+            "field": "reviews.rating",
+            "description": "<p>Star rating (1-5) of the review.</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "review.content",
+            "description": "<p>Body content of the review.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n  {\n     \"status\": \"success\",\n     \"reviews\": [\n       {\n         \"id\": 1,\n         \"content\": \"I've read better\",\n         \"rating\": 3.33,\n       },\n       {\n         \"id\": 2,\n         \"content\": \"I've read better\",\n         \"rating\": 3.33,\n       }\n     ]\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "api/routes/Review/index.js",
+    "groupTitle": "Reviews",
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "MissingAuth",
+            "description": "<p>No Authorization header was sent with the request.</p>"
+          },
+          {
+            "group": "Error 4xx",
+            "optional": false,
+            "field": "InvalidCreds",
+            "description": "<p>Token sent with the request is invalid or expired.</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "MissingAuth-Response:",
+          "content": "HTTP/1.1 400 Bad Request\n{\n  \"status\": \"error\",\n  \"error\": \"MissingAuth\",\n  \"message\": \"Please provide a token in the `Authorization` header.\",\n}",
+          "type": "json"
+        },
+        {
+          "title": "InvalidCreds-Response:",
+          "content": "HTTP/1.1 401 Unauthorized\n{\n  \"status\": \"error\",\n  \"error\": \"InvalidCreds\",\n  \"message\": \"Invalid/Expired authorization token provided.\",\n}",
+          "type": "json"
+        }
+      ]
+    }
   }
 ]

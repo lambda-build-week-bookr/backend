@@ -56,17 +56,23 @@ server.use(middleware);
   *   }
   */
 
-/**
- * @apiDefine InvalidCreds
- * @apiError InvalidCreds Token sent with the request is invalid or expired.
+  /**
+   * @apiDefine InvalidCreds
+   * @apiError InvalidCreds Token sent with the request is invalid or expired.
+   * 
+   * @apiErrorExample InvalidCreds-Response:
+   *  HTTP/1.1 401 Unauthorized
+   *  {
+   *    "status": "error",
+   *    "error": "InvalidCreds",
+   *    "message": "Invalid/Expired authorization token provided.",
+   *  }
+   */
+
+ /**
+ * @apiDefine admin Admin role required
+ * Only users with the role admin can access this endpoint
  * 
- * @apiErrorExample InvalidCreds-Response:
- *  HTTP/1.1 401 Unauthorized
- *  {
- *    "status": "error",
- *    "error": "InvalidCreds",
- *    "message": "Invalid/Expired authorization token provided.",
- *  }
  */
 
 server.get('/', (req, res) => {
