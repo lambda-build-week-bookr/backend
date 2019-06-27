@@ -46,7 +46,7 @@ const parser = async (subject) => {
       publishedDate,
       language,
     };
-  }).filter(book => book.description);
+  }).filter(({ description, categories }) => description && categories );
 
   return books;
 }

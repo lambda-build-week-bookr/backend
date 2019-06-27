@@ -121,7 +121,7 @@ router.get('/user/:id', async (req, res) => {
  *    {
  *      "status": "error",
  *      "error": "NonUnique",
- *      "message": "Provided `user_id` and `book_id` must be unique: [(1), (2)] already exists in the database.",
+ *      "message": "Provided `user_id` and `book_id` must be unique: [user.id(1), book.id(2)] already exists in the database.",
  *    }
  * 
  * @apiError NotFound Requested resource was not found.
@@ -157,7 +157,7 @@ router.post('/:id', validateId(bookDB), validateBody(reviewBody), async (req, re
       return res.status(400).json({
         status: 'error',
         error: 'NonUnique',
-        message: `Provided \`user_id\` and \`book_id\` must be unique: [(${user_id}), (${book_id})] already exists in the database.`,
+        message: `Provided \`user_id\` and \`book_id\` must be unique: [user.id(${user_id}), book.id(${book_id})] already exists in the database.`,
       });
     }
     res.status(500).json(await log.err(error));
