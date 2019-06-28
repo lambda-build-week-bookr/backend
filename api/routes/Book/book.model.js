@@ -157,30 +157,30 @@ const addBook = (data) => {
       return (categoryExists ? [categoryExists.id] : await db('category').insert({ name }))[0];
     }));
 
-    await db('book').insert({
+    const bookId = await db('book').insert({
       title: data.title,
       isbn: data.isbn,
       cover: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=3`,
       thumbnail: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=2`,
       description: data.description,
       publisher_id: publisherId[0],
-    }).returning('id').then(async (id) => {
-      console.log('\n\n\nIs postgres returning anything from the query???\n\n\n', id);
-      await Promise.all(
-        authorIds.map(async (authorId) => {
-          return await db('book_author').insert({
-            book_id: id[0],
-            author_id: authorId,
-          });
-        }),
-        categoryIds.forEach(async (categoryId) => {
-          return await db('book_category').insert({
-            book_id: id[0],
-            category_id: categoryId,
-          });
-        })
-        );
-      });
+    }).returning('id');
+
+    await Promise.all(
+      authorIds.map(async (authorId) => {
+        return await db('book_author').insert({
+          book_id: bookId[0],
+          author_id: authorId,
+        });
+      }),
+      categoryIds.forEach(async (categoryId) => {
+        return await db('book_category').insert({
+          book_id: bookId[0],
+          category_id: categoryId,
+        });
+      })
+    );
+
     return data;
   });
 };
