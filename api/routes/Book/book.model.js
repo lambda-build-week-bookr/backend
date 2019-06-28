@@ -165,6 +165,7 @@ const addBook = (data) => {
       description: data.description,
       publisher_id: publisherId[0],
     }).then(async (id) => {
+      console.log('\n\n\nIs postgres returning anything from the query???\n\n\n', id);
       await Promise.all(
         authorIds.map(async (authorId) => {
           return await db('book_author').insert({
