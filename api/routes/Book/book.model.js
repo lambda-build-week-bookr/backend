@@ -164,7 +164,7 @@ const addBook = (data) => {
       thumbnail: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=2`,
       description: data.description,
       publisher_id: publisherId[0],
-    }).then(async (id) => {
+    }).returning('id').then(async (id) => {
       console.log('\n\n\nIs postgres returning anything from the query???\n\n\n', id);
       await Promise.all(
         authorIds.map(async (authorId) => {
