@@ -144,10 +144,8 @@ const getCategoryBooks = async (id) => {
 const addBook = (data) => {
   return db.cb(async (db) => {
 
-    console.log(data);
-
     const publisherExists = await db('publisher').where({ name: data.publisher }).first();
-    const publisherId = (publisherExists ? [publisherExists.id] : await db('publisher').insert({ name: data.publisher }))[0];
+    const publisherId = await (publisherExists ? [publisherExists.id] : db('publisher').insert({ name: data.publisher }));
 
     const authorIds = await Promise.all(data.authors.map(async (name) => {
       const authorExists = await db('author').where({ name }).first();
@@ -165,7 +163,7 @@ const addBook = (data) => {
       cover: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=3`,
       thumbnail: `https://books.google.com/books/content?id=${data.gid}&printsec=frontcover&img=1&zoom=2`,
       description: data.description,
-      publisher_id: publisherId,
+      publisher_id: publisherId[0],
     });
     
     await Promise.all(
